@@ -6,4 +6,4 @@ from routes import app
 #SS.add_all_enrolments('enrolments.csv')
 
 
-app.run(debug=True, port=8080)
+app.run(debug=True, port=8000)

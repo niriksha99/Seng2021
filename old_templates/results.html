@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- The following template was adapted from: https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_webpage&stacked=h -->
+  {% block head %}
+  {% endblock %}
+  <title> {% block title %} {{ course }} Survey Results {% endblock %}</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 640px}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    #sidebar {
+      padding: 0px;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      margin-bottom: 0;
+      border-radius: 0;
+      background-color: #555;
+      color: white;
+      padding: 35px;
+    }
+  </style>
+</head>
+
+{% if results_data %}
+
+<body>
+
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{ url_for('index') }}">Potions Survey System</a>
+        <a class="navbar-brand" href="{{ url_for('logout') }}">Log Out</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-1 sidenav hidden-xs"> </div>
+
+    <div class="col-sm-10">
+        {% if course %}
+            {% block content %}
+                <h2> {{ course }} Survey Results </h2>
+                <hr>
+
+                <script src="https://www.google.com/jsapi"></script>
+                <div id="results_area"></div>
+            {% endblock %}
+        {% endif %}
+        <br>
+        <br>
+        <a href="{{ url_for('index') }}" class="btn btn-default" role="button"> Back to dashboard </a> <br>
+        <br>
+    </div>
+
+    <div class="col-sm-1 sidenav hidden-xs"> </div>
+  </div>
+</div>
+
+
+  <footer>
+  </footer>
+
+</body>
+
+<script>
+
+    var all_questions = {{ results_data|safe }};
+
+    var array_of_data; //global variable/array that will change with each question
+
+    var place = document.getElementById("results_area");
+
+    function changeData(new_data) {
+        array_of_data = [[{label: 'Option', id: 'option'},{label: 'n_responses', id: 'n_responses', type: 'number'}]].concat(new_data);
+    }
+
+
+    function displayResults() {
+        for(var i=0; i<all_questions.length; i++) {
+            var question = all_questions[i];
+            place.innerHTML += "<b>" + (i+1) + ". ";
+            place.innerHTML += "<b>" + question[0] + "<br>";
+            if (question[1] === "mc") {
+                changeData(question[2]);
+                var data = google.visualization.arrayToDataTable(array_of_data, false);
+                var container = document.getElementById('results_area').appendChild(document.createElement('div'));
+                var chart = new google.visualization.PieChart(container);
+                chart.draw(data);
+
+            } else if(question[1] === "fr") {
+                var table = document.createElement("TABLE");
+                table.setAttribute("id", question[0]);
+                table.setAttribute("class", "table table-striped");
+                place.appendChild(table);
+                for(var j=0; j<question[2].length; j++) {
+                    var tr = document.createElement("TR");
+                    tr.setAttribute("id", question[2][j]);
+                    document.getElementById(question[0]).appendChild(tr);
+
+                    var td = document.createElement("TD");
+                    var text = document.createTextNode(question[2][j]);
+                    td.appendChild(text);
+                    document.getElementById(question[2][j]).appendChild(td);
+                }
+                place.innerHTML += "</table>";
+            }
+        }
+    }
+
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(displayResults);
+
+  </script>
+{% endif %}
+
+</html>

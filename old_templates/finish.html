@@ -1,0 +1,11 @@
+{% extends "header_footer.html" %}
+{% block title %} thank you {% endblock %}
+
+{% block content %}
+
+  <h1> {{words}} </h1>
+  <br>
+  <form method="POST">
+    <input type="submit" value="Back to dashboard" class="btn btn-default">
+  </form>
+{% endblock %}

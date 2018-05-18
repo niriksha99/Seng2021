@@ -1,0 +1,32 @@
+{% extends "header_footer.html" %}
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+
+  <h1> Staff Dashboard </h1>
+  <hr>
+  <h3> Course Surveys to be reviewed </h3>
+  <ul>
+    {% if surveys %}
+
+        {% for survey in surveys %}
+            <li> <a href="{{ url_for('review_survey', course=survey.course, _external=True) }}"> {{ survey.course }} </a> <br> </li>
+        {% endfor %}
+
+    {% else %}
+     No courses to show
+    {% endif %}
+  </ul>
+
+  <hr>
+  <h3> Released survey results </h3>
+  <ul>
+    {% if closed_courses %}
+        {% for course in closed_courses %}
+            <li> <a href="{{ url_for('show_results', course=course.course, _external=True) }}"> {{ course.course }} </a> <br> </li>
+        {% endfor %}
+    {% else %}
+    No courses to show
+    {% endif %}
+  </ul>
+{% endblock %}

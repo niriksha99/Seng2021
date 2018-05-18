@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>{{data['name']}}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700,900|Raleway" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{url_for("static",filename="css/bootstrap.css")}}">
+    <link rel="stylesheet" href="{{url_for("static",filename="css/animate.css")}}">
+    <link rel="stylesheet" href="{{url_for("static",filename="css/owl.carousel.min.css")}}">
+
+    <link rel="stylesheet" href="{{url_for("static",filename="fonts/ionicons/css/ionicons.min.css")}}">
+    <link rel="stylesheet" href="{{url_for("static",filename="fonts/fontawesome/css/font-awesome.min.css")}}">
+
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="{{url_for("static",filename="css/style.css")}}">
+  </head>
+  <body>
+
+    <header role="banner">
+
+      <nav class="navbar navbar-expand-md navbar-dark bg-light">
+        <div class="container">
+          <div class="collapse navbar-collapse navbar-light" id="navbarsExample05">
+            <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
+              <li class="nav-item">
+                {%if login %}
+                <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+                {% else %}
+                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                {% endif %}
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" >Recently Viewed</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link">Favourite</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{url_for('logout')}}">Sign Out</a>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!-- END header -->
+
+    <section class="site-hero site-hero-innerpage overlay" data-stellar-background-ratio="0.5" style="background-image: url(/static/images/centre_image.jpg);">
+      <div class="container">
+        <div class="row align-items-center site-hero-inner justify-content-center">
+          <div class="col-md-8 text-center">
+
+            <div class="mb-5 element-animate">
+              <h1>{{data['name']}}</h1>
+              <br>
+              <p> <img src = {{ data['images'][0]['hostedLargeUrl'] }}> </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- END section -->
+    <div>
+
+          <p> </p>
+          <br>
+          <p> &emsp; &emsp; &emsp; &emsp;<b>Cooking time: </b>{{ (data['totalTimeInSeconds']/60)|round|int}} minutes </p>
+          <p> &emsp; &emsp; &emsp; &emsp;<b>Servings: </b>{{ data['numberOfServings'] }} </p>
+          <br>
+          <h3> &emsp; &emsp; &nbsp;Ingredients </h3>
+          <br>
+          <p>
+          {% for ingredient in data['ingredientLines'] %}
+          &emsp; &emsp; &emsp; &emsp;->&emsp; {{ingredient}}<br>
+          {% endfor %}
+          </p>
+          <br>
+          <h3> &emsp; &emsp; &nbsp;Recipe Source </h3>
+          <br>
+          <p> &emsp; &emsp; &emsp; &emsp;To access the method for recipe, click on this link ->
+          <a href={{data['source']['sourceRecipeUrl']}}>{{data['name']}}</a></p>
+          <br>
+        </div>
+
+
+    <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f4b214"/></svg></div>
+    <script src="{{url_for("static",filename="js/jquery-3.2.1.min.js")}}"></script>
+    <script src="{{url_for("static",filename="js/jquery-migrate-3.0.0.js")}}"></script>
+    <script src="{{url_for("static",filename="js/popper.min.js")}}"></script>
+    <script src="{{url_for("static",filename="js/bootstrap.min.js")}}"></script>
+    <script src="{{url_for("static",filename="js/owl.carousel.min.js")}}"></script>
+    <script src="{{url_for("static",filename="js/jquery.waypoints.min.js")}}"></script>
+    <script src="{{url_for("static",filename="js/jquery.stellar.min.js")}}"></script>
+    <script src="{{url_for("static",filename="js/main.js")}}"></script>
+  </body>
+</html>

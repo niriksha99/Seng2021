@@ -1,0 +1,55 @@
+{% extends "header_footer.html" %}
+{% block title %} {% endblock %}
+
+{% block content %}
+
+	<form name="delete_question" method="POST">
+	    <h3> Question Pool </h3>
+	    {% if question_pool %}
+			<h4> Mandatory Questions </h4>
+	        <ul>
+	            {% for question in question_pool%}
+					{% if not question.deleted %}
+						{% if question.requirement == "Mandatory" %}
+			                <input name="questions_to_delete" type="checkbox" value="{{ question.type }}:{{ question.question_text }}"> {{ question.question_text }} <br>
+			                    {% if question.type == "mc" %}
+			                        <ul>
+										{% if options %}
+											{% for option in options %}
+												<li> {{ option }} </li>
+											{% endfor %}
+										{% endif %}
+			                        </ul>
+		                    {% endif %}
+						{% endif %}
+					{% endif %}
+	            {% endfor %}
+	        </ul>
+
+			<h4> Optional Questions </h4>
+	        <ul>
+	            {% for question in question_pool%}
+                    {% if not question.deleted %}
+						{% if question.requirement == "Optional" %}
+			                <input name="questions_to_delete" type="checkbox" value="{{ question.type }}:{{ question.question_text }}"> {{ question.question_text }} <br>
+			                    {% if question.type == "mc" %}
+			                        <ul>
+										{% if options %}
+											{% for option in options %}
+												<li> {{ option }} </li>
+											{% endfor %}
+										{% endif %}
+			                        </ul>
+			                    {% endif %}
+						{% endif %}
+					{% endif %}
+	            {% endfor %}
+	        </ul>
+	    {% endif %}
+		<br>
+		<input type="submit" value="Delete question/s"> <br>
+	</form>
+	<br>
+	<a href="{{ url_for('index') }}" class="btn btn-default" role="button"> Back </a>
+
+{% endblock %}

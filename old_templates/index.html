@@ -1,0 +1,66 @@
+{% extends "header_footer.html" %}
+{% block title %} Dashboard {% endblock %}
+
+{% block content %}
+
+  <h1> Dashboard </h1>
+  <hr>
+      <div class="col-sm-6">
+      <h3> Question Pool </h3>
+      <ul>
+        {% if question_pool %}
+          {% for item in question_pool %}
+             <li> {{ item[0] }} </li>
+              {% for option in item[1] %} <!-- display the options for each question -->
+              <ul>
+                <li> {{ option }} </li>
+              </ul>
+              {% endfor %}
+          {% endfor %}
+        {% endif %}
+      </ul>
+
+      <hr>
+      <h4> Create a question </h4>
+      <br>
+
+      <a href="{{ url_for('create_mc_question') }}" class="btn btn-default" role="button"> Add a multiple choice quesiton</a> &emsp;  <a href="{{ url_for('create_fr_question') }}" class="btn btn-default" role="button"> Add a free response question </a>
+</div>
+
+
+<div class="col-sm-6">
+    <h3> Surveys </h3>
+        <!-- PRINT ALL CREATED SURVEYS -->
+        {% if course_list %}
+          {% for course in course_list %} <!-- MAKE SURE NOT ALREADY CREATED -->
+            {% if course != course_list[0] and course.get_status() == "review" %} <!-- Ignore "Course Offerings" that's been read from the CSV file -->
+                <option value="{{ course.get_course_name() }}"> {{ course.get_course_name() }} </option>  <!-- but this 'value' is what gets passed in -->
+ <!--            <a href="{{ url_for('create_survey',course=course.get_course_name(), _external=True) }}"> {{ course.get_course_name() }} </a> <br> -->
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+    <hr>
+    <h4> Create a survey </h4>
+        <form method="POST">
+          <select name="course" class="form-control">  <!-- "question" is the variable name that flask will look for -->
+        {% if course_list %}
+          {% for course in course_list %} <!-- MAKE SURE NOT ALREADY CREATED -->
+            {% if course != course_list[0] and course.get_status() == "to_create" %} <!-- Ignore "Course Offerings" that's been read from the CSV file -->
+                <option value="{{ course.get_course_name() }}"> {{ course.get_course_name() }} </option>  <!-- but this 'value' is what gets passed in -->
+ <!--            <a href="{{ url_for('create_survey',course=course.get_course_name(), _external=True) }}"> {{ course.get_course_name() }} </a> <br> -->
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+          </select>
+          <br>
+          <button type="submit" class="btn btn-default"> Create survey </button>
+        </form>
+<!--              <a href="{{ url_for('create_mc_question') }}" class="btn btn-default" role="button"> Add a multiple choice quesiton</a> &emsp;proj -->
+
+
+</div>
+
+
+
+{% endblock %}

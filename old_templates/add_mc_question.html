@@ -1,0 +1,32 @@
+{% extends 'header_footer.html' %}
+
+{% block title %} Create a multiple choice question {% endblock %}
+
+{% block content %}
+
+<h1> Create a multiple choice question </h1>
+<hr>
+<div class="col-sm-12">
+
+	<form name="create_question" method="POST" onsubmit="return validate_option()">
+		<input  type="text" name="question" placeholder="Enter a question to add" required="required"/> <br>
+
+
+
+
+
+		<h5> Select if optional or mandatory </h5>
+		<input type="radio" name="requirement" value="Mandatory" required="required"> Mandatory </input>
+		<input type="radio" name="requirement" value="Optional" required="required"> Optional </input>
+		<br>
+		<br>
+		<button type="submit" value="Add question"> Add question to pool </button> <!-- NEED TO VALIDATE THAT QUESTION HAS BEEN TYPED AND THAT THERE ARE OPTIONS -->
+	</form>
+	<br>
+	<br>
+	<a href="{{ url_for('index') }}" class="btn btn-default" role="button"> Back </a>
+
+</div>
+
+
+{% endblock %}

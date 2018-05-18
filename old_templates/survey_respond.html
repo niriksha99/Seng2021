@@ -1,0 +1,61 @@
+{% extends "header_footer.html" %}
+
+
+{% if course %}
+    {% block title %} {{ course }} Survey {% endblock %}
+
+    {% block content %}
+
+      <h2> {{ course }} Survey </h2>
+
+	<form name="survey_resonse" method="POST">
+	    <h3> Question Pool </h3>
+	    {% if survey_questions %}
+			<h4> Mandatory Questions </h4>
+	        <ol>
+	            {% for question in survey_questions %}
+					{% if question.requirement == "Mandatory" %}
+		                <li> {{ question.question_text }} </li>
+		                    {% if question.type == "mc" %}
+		                        <ul>
+									{% if options %}
+										{% for option in options %}
+                                            <input name="{{ question.question_text }}" type="radio" value="{{ option }}" required="required"> {{ option }} <br>
+										{% endfor %}
+									{% endif %}
+		                        </ul>
+                            {% else %}
+                                <textarea name="{{ question.question_text }}" rows="4" cols="50" required></textarea>
+                            {% endif %}
+					{% endif %}
+	            {% endfor %}
+	        </ol>
+
+			<h4> Optional Questions </h4>
+	        <ul>
+	            {% for question in survey_questions %}
+					{% if question.requirement == "Optional" %}
+		                <li> {{ question.question_text }} </li>
+		                    {% if question.type == "mc" %}
+		                        <ul>
+									{% if options %}
+										{% for option in options %}
+                                            <input name="{{ question.question_text }}" type="radio" value="{{ option }}" > {{ option }} <br>
+										{% endfor %}
+									{% endif %}
+		                        </ul>
+                            {% else %}
+                                <textarea name="{{ question.question_text }}" rows="4" cols="50"></textarea>
+                            {% endif %}
+					{% endif %}
+	            {% endfor %}
+	        </ul>
+	    {% endif %}
+		<input type="submit" value="Submit" class="btn btn-default"> <br>
+	</form>
+	<br>
+	<a href="{{ url_for('index') }}" class="btn btn-default" role="button"> Back to dashboard </a>
+
+
+    {% endblock %}
+{% endif %}

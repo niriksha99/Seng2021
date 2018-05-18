@@ -1,0 +1,22 @@
+{% extends "header_footer.html" %}
+{% block title %} Index {% endblock %}
+
+{% block content %}
+
+    {% if question_pool %}
+        <h3> Question Pool </h3>
+        <ul>
+            {% for question in question_pool %}
+                <li> {{ question.question_text }}  (Type: {{ question.requirement }})</li>
+                    {% if question.options %}
+                        <ul>
+                            {% for option in question.options[1:-1].split(',') %}
+                                <li> {{ option }} </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endblock %}

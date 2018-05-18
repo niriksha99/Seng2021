@@ -1,0 +1,52 @@
+{% extends "header_footer.html" %}
+{% block title %} Index {% endblock %}
+
+{% block content %}
+
+    <h3> All Course Surveys </h3>
+    <hr>
+    <div class="col-sm-6">
+    {% if all_surveys %}
+
+
+        <h4> Surveys to Create </h4>
+        <select id="select_course" class="form-control">
+            {% for survey in all_surveys %}
+                {% if survey.status == "to_create" %}
+                    <option value="{{ survey.course_name }}"> {{ survey.course_name }} </option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <br>
+        <a href="////////NEED TO FIND A WAY TO GET THE VALUE THAT IS SELECT OTHERWISE NEED TO CREATE FORM AND USE FLASK TO REDIRECT" class="btn btn-default" role="button"> Create Survey </a>
+        <br>
+        <br>
+
+        <h4> Surveys in Review </h4>
+        <ul>
+            {% for survey in all_surveys %}
+                {% if survey.status == "in_review" %}
+                    {{ survey.survey }}
+                    <li> {{ survey.course_name }} </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+
+        <h4> Opened Surveys </h4>
+        <ul>
+            {% for survey in all_surveys %}
+                {% if survey.status == "opened" %}
+                    {{ survey.survey }}
+                    <li> {{ survey.course_name }} </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+
+    {% endif %}
+    </div>
+
+
+
+{% endblock %}

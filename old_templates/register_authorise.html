@@ -1,0 +1,37 @@
+{% extends 'header_footer.html' %}
+
+{% block title %} Authorise Guest Registration Request {% endblock %}
+
+{% block content %}
+
+<h1> Authorise Guest User </h1>
+<hr>
+
+<div class="col-sm-12">
+
+	<form method="POST">
+	   <h3> All Guest Users </h3>
+		<hr>
+		<div class="col-sm-6">
+		{% if all_guest_users %}
+
+			<select name="select_guest" class="form-control">
+				{% for user in all_guest_users %}
+						<option value="{{ user.id }}:{{ user.course }}"> {{ user.id}}:{{ user.course }} </option>
+				{% endfor %}
+			</select>
+			<br>
+			<br>
+
+		<input type="submit" value="Authorise" class="btn btn-default"> <br>
+		{% else %}
+		No guest registration request!
+		{% endif %}
+		</div>
+	</form>
+	<br>
+	<br>
+	<a href="{{ url_for('index') }}" class="btn btn-default" role="button"> Back to dashboard </a>
+</div>
+
+{% endblock %}

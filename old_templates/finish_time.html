@@ -1,0 +1,14 @@
+{% extends "header_footer.html" %}
+{% block title %} thank you {% endblock %}
+
+{% block content %}
+
+  <h1> {{words}} </h1>
+  <br>
+  <form method="POST">
+    <h3>How many days do you want set for closing the survey?<br></h3>
+    <input name="question" placeholder="Enter a number"><br>
+  <br> <input type="submit" value="Back to dashboard" class="btn btn-default">
+  </form>
+  
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'header_footer.html' %}
+
+{% block title %} Create a free response question {% endblock %}
+
+{% block content %}
+
+<h1> Create a free response question </h1>
+<hr>
+
+<div class="col-sm-12">
+
+	<form method="POST">
+	  <input name="question" placeholder="Enter a question to add" required/> <br>
+		<br>
+		<h5> Select if optional or mandatory </h5>
+		<input type="radio" name="requirement" value="Mandatory" required> Mandatory </input>
+		<input type="radio" name="requirement" value="Optional" required> Optional </input>    <!-- VALIDATE THAT A REQUIREMENT OPTION HAS BEEN SELECTED AND A QUESTION TYPED -->
+		<br>
+		<br>
+	  <button> Add question to pool </button> <br>
+	  <br>
+	  <br>
+	  <a href="{{ url_for('index') }}" class="btn btn-default" role="button"> Back </a>
+	</form>
+
+</div>
+
+{% endblock %}

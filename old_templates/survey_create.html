@@ -1,0 +1,60 @@
+{% extends "header_footer.html" %}
+
+{% if course %}
+	{% block title %} Create {{ course }} Survey {% endblock %}
+
+	{% block content %}
+
+		<h2> Create {{ course }} survey </h2>
+		<hr>
+
+	<form name="create_survey" method="POST">
+	    <h3> Question Pool </h3>
+	    {% if question_pool %}
+			<h4> Mandatory Questions </h4>
+	        <ul>
+	            {% for question in question_pool%}
+					{% if not question.deleted %} <!-- only display questions are not "deleted" -->
+						{% if question.requirement == "Mandatory" %}
+			                <input name="questions_to_add" type="checkbox" value="{{ question.question_text }}"> {{ question.question_text }} <br>
+			                    {% if question.type == "mc" %}
+			                        <ul>
+										{% if options %}
+											{% for option in options %}
+												<li> {{ option }} </li>
+											{% endfor %}
+										{% endif %}
+			                        </ul>
+			                    {% endif %}
+							{% endif %}
+					{% endif %}
+	            {% endfor %}
+	        </ul>
+
+			<h4> Optional Questions </h4>
+	        <ul>
+	            {% for question in question_pool %}
+					{% if not question.deleted %}
+						{% if question.requirement == "Optional" %}
+			                <li> {{ question.question_text }} </li>
+			                    {% if question.type == "mc" %}
+			                        <ul>
+										{% if options %}
+											{% for option in options %}
+												<li> {{ option }} </li>
+											{% endfor %}
+										{% endif %}
+			                        </ul>
+			                    {% endif %}
+						{% endif %}
+					{% endif %}
+	            {% endfor %}
+	        </ul>
+	    {% endif %}
+		<br>
+		<input type="submit" value="Add question/s" class="btn btn-default"> <br>
+	</form>
+	<br>
+	<a href="{{ url_for('index') }}" class="btn btn-default" role="button"> Back </a>
+	{% endblock %}
+{% endif %}

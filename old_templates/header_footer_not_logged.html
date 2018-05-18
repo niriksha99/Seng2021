@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- The following template was adapted from: https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_webpage&stacked=h -->
+  <title> {% block title %} {% endblock %} </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    /* Remove the navbar's default margin-bottom and rounded borders */
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 640px}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    #sidebar {
+      padding: 0px;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      margin-bottom: 0;
+      border-radius: 0;
+      background-color: #555;
+      color: white;
+      padding: 35px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{ url_for('login') }}">Potions Survey System</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-12">
+        {% block content %} {% endblock %}
+    </div>
+  </div>
+</div>
+
+  <footer>
+
+  </footer>
+
+</body>
+</html>

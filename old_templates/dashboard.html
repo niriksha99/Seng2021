@@ -1,0 +1,127 @@
+{% extends "header_footer.html" %}
+{% block title %} Index {% endblock %}
+
+{% block content %}
+    <h1> Dashboard </h1>
+    <hr>
+
+
+    <div class="col-sm-5">
+
+    {% if all_surveys %}
+
+        <h3> Surveys to Create </h3>
+        <form method="POST">
+            <select name="select_course" class="form-control">
+                {% for survey in all_surveys %}
+                    {% if survey.state == "to_create" %}
+                        <option value="{{ survey.course }}"> {{ survey.course }} </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <br>
+            <button class="btn btn-default" name="submit" value="sub"> Create Survey </button>
+        </form>
+        <br>
+        <hr>
+        <h3> Metrics for: </h3>
+        <h4> Surveys in Review </h4>
+        <ul>
+            {% for survey in all_surveys %}
+                {% if survey.state == "review" %}
+                    {{ survey.survey }}
+                    <li><a href="{{ url_for('show_results', course=survey.course, _external=True) }}"> {{ survey.course }} </a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+
+        <h4> Opened Surveys </h4>
+        <ul>
+            {% for survey in all_surveys %}
+                {% if survey.state == "open" %}
+                    {{ survey.survey }}
+                    <li><a href="{{ url_for('show_results', course=survey.course, _external=True) }}"> {{ survey.course }} </a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+        <h4> Closed Surveys </h4>
+        <ul>
+            {% for survey in all_surveys %}
+                {% if survey.state == "closed" %}
+                  <li><a href="{{ url_for('show_results', course=survey.course, _external=True) }}"> {{ survey.course }} </a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+    </div>
+
+
+    <div class="col-sm-7">
+
+        <h3> Question Pool </h3>
+        {% if question_pool %}
+            <h4> Mandatory Questions </h4>
+	        <ul>
+	            {% for question in question_pool%}
+					{% if not question.deleted %}
+						{% if question.requirement == "Mandatory" %}
+
+			                <li> {{ question.question_text }} </li>
+			                    {% if question.type == "mc" %}
+			                        <ul>
+										{% if options %}
+											{% for option in options %}
+												<li> {{ option }} </li>
+											{% endfor %}
+										{% endif %}
+			                        </ul>
+		                    {% endif %}
+						{% endif %}
+					{% endif %}
+	            {% endfor %}
+	        </ul>
+
+			<h4> Optional Questions </h4>
+	        <ul>
+	            {% for question in question_pool%}
+                    {% if not question.deleted %}
+						{% if question.requirement == "Optional" %}
+			                <li> {{ question.question_text }} </li>
+			                    {% if question.type == "mc" %}
+			                        <ul>
+										{% if options %}
+											{% for option in options %}
+												<li> {{ option }} </li>
+											{% endfor %}
+										{% endif %}
+			                        </ul>
+			                    {% endif %}
+						{% endif %}
+					{% endif %}
+	            {% endfor %}
+	        </ul>
+
+        {% else %}
+            No questions in the pool <br>
+        {% endif %}
+        <br>
+        <a href="{{ url_for('create_mc_question') }}" class="btn btn-default" role="button"> Add a multiple choice question</a>
+        &emsp;
+        <a href="{{ url_for('create_fr_question') }}" class="btn btn-default" role="button"> Add a free response question </a>
+        <br>
+        <br>
+        <div>
+            <a href="{{ url_for('delete_question') }}" class="btn btn-default" role="button" align="center"> Delete a question </a>
+        </div>
+        <hr>
+        <br>
+		<a href="{{ url_for('register_authorise') }}" class="btn btn-default" role="button"> <b> Guest registration requests </b> </a> <br>
+        <br>
+
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "header_footer_not_logged.html"%}
+
+{% block title %} Sign in {% endblock %}
+
+{% block content %}
+          <div class="container-fluid text-center">
+            <h3> Please sign in </h3>
+            <form method="POST">
+              <input name="user_id" placeholder="Username" required="required"/> <br>
+              <input type="password" name="password" placeholder="Password" required="required"/>
+              <br>
+              <br>
+              <input type="submit" name="btn" value="Login in"/>
+              <br>
+              <br>
+			  <a href="{{ url_for('register') }}" class="btn btn-default" role="button"> Guest Register </a>
+              <br>
+              <br>
+            </form>
+            {% if fail %}
+                <p style="color: red;"> Please enter a valid username and password </p>
+            {% endif %}
+          </div>
+{% endblock %}

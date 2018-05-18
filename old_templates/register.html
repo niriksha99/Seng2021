@@ -1,0 +1,44 @@
+{% extends 'header_footer.html' %}
+
+{% block title %} Register Guest User {% endblock %}
+
+{% block content %}
+
+<h1> Register for Guest </h1>
+<hr>
+
+<div class="col-sm-12">
+
+	<form method="POST">
+	  <input type="text" name="user_id" placeholder="Enter user id" required/> <br>
+	  <br>
+	  <input type="password" name="password" placeholder="Enter password" required/> <br>
+	  <br>
+	  <h3> All Course Offerings </h3>
+		<hr>
+		<div class="col-sm-6">
+		{% if all_surveys %}
+
+			<h4> Courses to Register </h4>
+			<select name="select_course" class="form-control">
+				{% for survey in all_surveys %}
+						<option value="{{ survey.course }}"> {{ survey.course }} </option>
+				{% endfor %}
+			</select>
+			<br>
+			<br>
+
+		{% endif %}
+		</div>
+	  <br>
+	   <!--<button class="btn btn-default" name="submit" value="sub"> Register </button>-->
+	   <input type="submit" value="Register" class="btn btn-default">
+	  <br>
+	  <br>
+	  <br>
+	  <a href="{{ url_for('login') }}" class="btn btn-default" role="button"> Back to login </a>
+	</form>
+
+</div>
+
+{% endblock %}

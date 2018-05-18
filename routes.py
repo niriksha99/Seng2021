@@ -45,7 +45,7 @@ def index():
 			#list.append(str(data["hits"][i]["recipe"]["label"]))
 			#i = i + 1
 		#return redirect(url_for("show_results", list=list))
-		
+
 	return render_template('home.html', error=0, login=roles.login_role)
 
 # user

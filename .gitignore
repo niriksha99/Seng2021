@@ -1,6 +1,6 @@
 *.pyc
 .DS_Store
-.idea
+.idea/*.xml
 __pycache__/*.pyc
 *.swp
 templates/*.swp

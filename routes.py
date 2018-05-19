@@ -23,6 +23,8 @@ def index():
 		ingredient = returnValue[0]
 		time = returnValue[1]
 		allergy = returnValue[2]
+		print("allergy is ")
+		print(allergy)
 		exclude = returnValue[3]
 		return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
 	return render_template('home.html', error=0, login=roles.login_role)
@@ -83,6 +85,7 @@ def show_results(ingredient, time, allergy, exclude):
 		if roles.pageNo != 0:
 			secondPage = "true"
 		return render_template('result.html', data=data, second=secondPage)
+	allergy = trim_allergy(allergy)
 	data = process_request(ingredient, time, allergy, exclude)
 	return render_template('result.html', data=data)
 

@@ -82,8 +82,25 @@ def show_results(ingredient, time, allergy, exclude):
 	#results_data = SS.get_results_data(results)
 	if request.method == 'POST':
 		button = request.form['search']
-		if button == "next":
-			roles.pageNo = roles.pageNo + 9
+		if button =="search":
+			ingredient = request.form['ingredient']
+			time = request.form['time']
+			allergy = request.form['allergy']
+			exclude = request.form['exclude']
+			roles.pageNo = 0
+			roles.parameters = {"_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requiredPictures": "true"}
+			ingredient = ingredient.split()
+			roles.parameters['allowedIngredient'] = ingredient
+			if time != "":
+				time = int(time) * 60
+				roles.parameters['maxTotalTimeInSeconds'] = time
+			if allergy != "":
+				allergy = allergy.split()
+				roles.parameters['allowedAllergy'] = allergy
+			if exclude != "":
+				exclude = exclude.split()
+				roles.parameters['excludedIngredient'] = exclude
+			roles.parameters['maxResult'] = 9
 			roles.parameters['start'] = roles.pageNo
 			response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
 			data = response.json()
@@ -97,11 +114,28 @@ def show_results(ingredient, time, allergy, exclude):
 				print(data['matches'][i]['smallImageUrls'][0])
 				i = i+1
 			return render_template('result.html', data=data)
+		elif button == "next":
+			roles.pageNo = roles.pageNo + 9
+		elif button == "previous":
+			roles.pageNo = roles.pageNo - 9
+		roles.parameters['maxResult'] = 9
+		roles.parameters['start'] = roles.pageNo
+		response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
+		data = response.json()
+		i = 0
+		second = "false"
+		if roles.pageNo != 0:
+			second = "true"
+		print(second)
+		while i < 9:
+			s = list(data['matches'][i]['smallImageUrls'][0])
+			s[-1] = '6'
+			s[-2] = '3'
+			s.append('0')
+			data['matches'][i]['smallImageUrls'][0] = "".join(s)
+			i = i+1
+		return render_template('result.html', data=data, second=second)
 
-	print(ingredient)
-	print(time)
-	print(allergy)
-	print(exclude)
 	roles.pageNo = 0
 	roles.parameters = {"_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requiredPictures": "true"}
 	ingredient = ingredient.split()
@@ -126,9 +160,7 @@ def show_results(ingredient, time, allergy, exclude):
 		s[-2] = '3'
 		s.append('0')
 		data['matches'][i]['smallImageUrls'][0] = "".join(s)
-		print(data['matches'][i]['smallImageUrls'][0])
 		i = i+1
-
 
 	return render_template('result.html', data=data)
 

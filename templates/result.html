@@ -129,13 +129,16 @@
 
             <div class="row element-animate pt-5">
               <div class="col-6 text-left mb-3">
+              {% set a = "true" %}
+              {% if second|string() == a|string() %}
               <form method="post">
-              <button name="search" type="submit" value="next" class="btn btn-dark"> <- </a></button>
+              <button name="search" type="submit" value="previous" class="btn btn-dark"> Previous Page </a></button>
               </form>
+              {% endif %}
               </div>
               <div class="col-6 text-right">
               <form method="post">
-              <button name="search" type="submit" value="next" class="btn btn-dark"> -> </a></button>
+              <button name="search" type="submit" value="next" class="btn btn-dark"> Next Page </a></button>
               </form>
               </div>
             </div>

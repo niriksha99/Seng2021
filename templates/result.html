@@ -31,7 +31,7 @@
                 <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" >Recently Viewed</a>
+                <a class="nav-link">Recently Viewed</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link">Favourite</a>
@@ -52,7 +52,7 @@
         <div class="collapse navbar-collapse navbar-light" id="navbarsExample05">
           <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
+              <a class="nav-link" href="{{ url_for('index') }}">Home</a>
             </li>
           </ul>
 
@@ -112,21 +112,42 @@
      <div class="container">
        <div class="row">
 
-      {% if data %}
-         {% for recipe in data['matches'] %}
+         {% if data %}
+            {% for recipe in data['matches'] %}
           <div class="col-md-4 element-animate ">
-          <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} " class="img-bg" style="background-image: url({{recipe['smallImageUrls'][0]}})">
-              <div class="text">
-              {{recipe['recipeName']}} <br>
-              Cook Time: {{(recipe['totalTimeInSeconds']/60)|round|int}} minutes<br>
+               <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['smallImageUrls'][0]}})">
+               <div class="text">
+               <h2>
+               {{recipe['recipeName']}} <br>
+               Cook Time: {{(recipe['totalTimeInSeconds']|int /60)|round|int}} minutes<br>
+               </h2>
               </div>
           </a>
           </div>
          {% endfor %}
       {% endif %}
             </div>
+
+            <div class="row element-animate pt-5">
+              <div class="col-6 text-left mb-3">
+              {% set a = "true" %}
+              {% if second|string() == a|string() %}
+              <form method="post">
+              <button name="search" type="submit" value="previous" class="btn btn-dark"> Previous Page </a></button>
+              </form>
+              {% endif %}
+              </div>
+              <div class="col-6 text-right">
+              <form method="post">
+              <button name="search" type="submit" value="next" class="btn btn-dark"> Next Page </a></button>
+              </form>
+              </div>
+            </div>
+
           </div>
         </section>
+
+
 
     <!-- loader -->
     <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f4b214"/></svg></div>

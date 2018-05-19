@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>User Dashboard</title>
+    <title>{{ user }} Dashboard</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -25,11 +25,11 @@
         <div class="container">
           <div class="collapse navbar-collapse navbar-light" id="navbarsExample05">
             <ul class="navbar-nav ml-auto pl-lg-5 pl-0">
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" >Recently Viewed</a>
+                <a class="nav-link">Recently Viewed</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link">Favourite</a>
@@ -43,7 +43,7 @@
         </div>
       </nav>
     </header>
-    <!-- END header -->
+    <!-- END header-->
 
     <section class="site-hero site-hero-innerpage overlay" data-stellar-background-ratio="0.5" style="background-image: url('static/images/centre_image.jpg');">
       <div class="container">
@@ -51,17 +51,31 @@
           <div class="col-md-8 text-center">
 
             <div class="mb-5 element-animate">
+              <br>
+              <br>
               <h1>Welcome, {{ user }}!</h1>
               <p>See the recents, Save your faves, Share your opinions.</p>
 
-               <form action="https://www.google.com.au" onsubmit="return encodeQuery()" method="get">
-              <div class="input-group custom-search-form">
-              <input type="text" class="form-control" name="query" value="">
-              <span class="input-group-btn">
-              <button type="submit" class="btn btn-dark mt-2 mt-sm-0">Search</button>
-              <span class="glyphicon glyphicon-search"></span>
-              </span>
-            </div>
+              <form method="post">
+                <div class="input-group custom-search-form">
+                  <input name="ingredient" type="text" class="form-control" placeholder="required ingredient" required="required"><!--class="form-control" -->
+                </div>
+                <div class="input-group custom-search-form">
+                  <input name="time" type="text" class="form-control" placeholder="cooking time (in minutes)"><!--class="form-control" -->
+                </div>
+                <div class="input-group custom-search-form">
+                  <input name="allergy" type="text" class="form-control" placeholder="allergy"><!--class="form-control" -->
+                </div>
+                <div class="input-group custom-search-form">
+                  <input name="exclude" type="text" class="form-control" placeholder="exclude ingredient"><!--class="form-control" -->
+                </div>
+
+                <br>
+            <p> Supported allergies: <br> Dairy, Egg, Gluten, Peanut, Seafood, Sesame, Soy, Sulfite, Tree Nut, Wheat</p>
+            <span class="input-group-btn">
+            <button name="search" type="submit" class="btn btn-dark mt-2 mt-sm-0" value="search">Search</button>
+            <span class="glyphicon glyphicon-search"></span>
+            </span>
             </form>
 
             </div>
@@ -87,34 +101,11 @@
               </div>
             </a>
           </div>
-          <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg" style="background-image: url('static/images/2.jpg')">
-              <div class="text">
-                <h2>Chocolate Cheesecake</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg last" style="background-image: url('static/images/3.png')">
-              <div class="text">
-                <h2>Curry Rice Salad</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
         </div>
+
         <div class="mb-5 element-animate">
             <h1>Favourites...</h1>
         </div>
-        {% if data %}
-         {% for recipe in data %}
-			<p>
-            <a href = "{{ url_for('get_recipe', recipeID = recipe) }} ">{{ recipe }}</a><br>
-			</p>
-         {% endfor %}
-        {% endif %}
-        <!--
         <div class="row">
           <div class="col-md-4 element-animate ">
             <a href="#" class="img-bg" style="background-image: url('static/images/4.jpg')">
@@ -124,38 +115,10 @@
               </div>
             </a>
           </div>
-          <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg" style="background-image: url('static/images/5.jpg')">
-              <div class="text">
-                <h2>Aussie Meat Pie</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg last" style="background-image: url('static/images/6.jpg')">
-              <div class="text">
-                <h2>Custard Vanilla Slice</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
         </div>
-        -->
       </div>
     </section>
     <!-- END section -->
-
-        <div class="row justify-content-center">
-          <div class="col-md-7 text-center">
-            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-          </div>
-        </div>
-
-
-    <!-- END footer -->
 
     <!-- loader -->
     <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f4b214"/></svg></div>

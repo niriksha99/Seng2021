@@ -6,6 +6,7 @@ import json
 #import RecipeSystem
 import roles
 import requests
+from model import *
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -18,34 +19,14 @@ def index():
 			user_id = request.form['user_name']
 			password = request.form['password']
 			return login(user_id, password)
-		#else:
-			#return redirect(url_for("search", ingredient))
-		#with urlopen("http://api.yummly.com/v1/api/recipes" + str(movie_id) + "?api_key=821187eead4cdc21bc56a11d8f6f2c6f&language=en-US") as response:
-			#source = str(response.read(), 'utf-8') #twas in bytes before, converted to string
-			#data = json.loads(source)
-		ingredient = request.form['ingredient']
-		time = request.form['time']
-		allergy = request.form['allergy']
-		exclude = request.form['exclude']
-		if time == "":
-			time = "null"
-		if allergy == "":
-			allergy = "null"
-		if exclude == "":
-			exclude = "null"
-
-		#parameters = {"q": ingredient, "_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requiredPictures": "true"}
-		#response = requests.get("http://api.yummly.com/v1/api/recipes", parameters)
-		#data = json.loads(str(response))
-		# return render_template('home.html')
+		returnValue = get_data()
+		ingredient = returnValue[0]
+		time = returnValue[1]
+		allergy = returnValue[2]
+		print("allergy is ")
+		print(allergy)
+		exclude = returnValue[3]
 		return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
-		#i = 0
-		#list = []
-		#while i < 10:
-			#list.append(str(data["hits"][i]["recipe"]["label"]))
-			#i = i + 1
-		#return redirect(url_for("show_results", list=list))
-		
 	return render_template('home.html', error=0, login=roles.login_role)
 
 # user
@@ -80,24 +61,31 @@ def register():
 def show_results(ingredient, time, allergy, exclude):
 	#results = SS.get_results(course)
 	#results_data = SS.get_results_data(results)
-	print(ingredient)
-	print(time)
-	print(allergy)
-	print(exclude)
-	parameters = {"_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requiredPictures": "true"}
-	ingredient = ingredient.split()
-	parameters['allowedIngredient'] = ingredient
-	if time != "null":
-		time = int(time) * 60
-		parameters['maxTotalTimeInSeconds'] = time
-	if allergy != "null":
-		allergy = allergy.split()
-		parameters['allowedAllergy'] = allergy
-	if exclude != "null":
-		exclude = exclude.split()
-		parameters['excludedIngredient'] = exclude
-	response = requests.get("http://api.yummly.com/v1/api/recipes", parameters)
-	data = response.json()
+	if request.method == 'POST':
+		button = request.form['search']
+		if button =="search":
+			returnValue = get_data()
+			ingredient = returnValue[0]
+			time = returnValue[1]
+			allergy = returnValue[2]
+			exclude = returnValue[3]
+			data = process_request(ingredient, time, allergy, exclude)
+			return render_template('result.html', data=data)
+		elif button == "next":
+			roles.pageNo = roles.pageNo + 9
+		elif button == "previous":
+			roles.pageNo = roles.pageNo - 9
+		roles.parameters['maxResult'] = 9
+		roles.parameters['start'] = roles.pageNo
+		response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
+		data = response.json()
+		data = change_picture_size(data)
+		secondPage = "false"
+		if roles.pageNo != 0:
+			secondPage = "true"
+		return render_template('result.html', data=data, second=secondPage)
+	allergy = trim_allergy(allergy)
+	data = process_request(ingredient, time, allergy, exclude)
 	return render_template('result.html', data=data)
 
 

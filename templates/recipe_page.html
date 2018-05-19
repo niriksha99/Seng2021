@@ -66,7 +66,7 @@
     </nav>
   </header>
   {% endif %}
-  
+
     <!-- END header -->
 
     <section class="site-hero site-hero-innerpage overlay" data-stellar-background-ratio="0.5" style="background-image: url('/static/images/centre_image.jpg');">
@@ -85,10 +85,11 @@
       </div>
     </section>
     <!-- END section -->
-    <div>
 
-          <p> </p>
-          <br>
+    <section class="site-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-md-12 mb-5">
           <p> &emsp; &emsp; &emsp; &emsp;<b>Cooking time: </b>{{ (data['totalTimeInSeconds']/60)|round|int}} minutes </p>
           <p> &emsp; &emsp; &emsp; &emsp;<b>Servings: </b>{{ data['numberOfServings'] }} </p>
           <br>
@@ -104,9 +105,12 @@
           <br>
           <p> &emsp; &emsp; &emsp; &emsp;To access the method for recipe, click on this link ->
           <a href={{data['attribution']['url']}}>{{data['name']}}</a></p>
-          <br>
+          </div>
+        <div class="col-lg-6 col-md-12 mb-5 element-animate" data-animate-effect="fadeInLeft">
+            <p> <img src = {{ data['images'][0]['hostedLargeUrl'] }}> </p>
         </div>
-
+      </div>
+    </section>
 
     <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f4b214"/></svg></div>
     <script src="{{url_for("static",filename="js/jquery-3.2.1.min.js")}}"></script>

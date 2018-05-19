@@ -31,7 +31,7 @@
                 <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" >Recently Viewed</a>
+                <a class="nav-link">Recently Viewed</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link">Favourite</a>
@@ -111,7 +111,6 @@
     <section class="feature-destination">
      <div class="container">
        <div class="row">
-
       {% if data %}
          {% for recipe in data['matches'] %}
           <div class="col-md-4 element-animate ">
@@ -125,8 +124,24 @@
          {% endfor %}
       {% endif %}
             </div>
+
+            <div class="row element-animate pt-5">
+              <div class="col-6 text-left mb-3">
+              <form method="post">
+              <button name="search" type="submit" value="next" class="btn btn-dark"> <- </a></button>
+              </form>
+              </div>
+              <div class="col-6 text-right">
+              <form method="post">
+              <button name="search" type="submit" value="next" class="btn btn-dark"> -> </a></button>
+              </form>
+              </div>
+            </div>
+
           </div>
         </section>
+
+
 
     <!-- loader -->
     <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f4b214"/></svg></div>

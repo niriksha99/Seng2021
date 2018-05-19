@@ -80,24 +80,56 @@ def register():
 def show_results(ingredient, time, allergy, exclude):
 	#results = SS.get_results(course)
 	#results_data = SS.get_results_data(results)
+	if request.method == 'POST':
+		button = request.form['search']
+		if button == "next":
+			roles.pageNo = roles.pageNo + 9
+			roles.parameters['start'] = roles.pageNo
+			response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
+			data = response.json()
+			i = 0
+			while i < 9:
+				s = list(data['matches'][i]['smallImageUrls'][0])
+				s[-1] = '6'
+				s[-2] = '3'
+				s.append('0')
+				data['matches'][i]['smallImageUrls'][0] = "".join(s)
+				print(data['matches'][i]['smallImageUrls'][0])
+				i = i+1
+			return render_template('result.html', data=data)
+
 	print(ingredient)
 	print(time)
 	print(allergy)
 	print(exclude)
-	parameters = {"_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requiredPictures": "true"}
+	roles.pageNo = 0
+	roles.parameters = {"_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requiredPictures": "true"}
 	ingredient = ingredient.split()
-	parameters['allowedIngredient'] = ingredient
+	roles.parameters['allowedIngredient'] = ingredient
 	if time != "null":
 		time = int(time) * 60
-		parameters['maxTotalTimeInSeconds'] = time
+		roles.parameters['maxTotalTimeInSeconds'] = time
 	if allergy != "null":
 		allergy = allergy.split()
-		parameters['allowedAllergy'] = allergy
+		roles.parameters['allowedAllergy'] = allergy
 	if exclude != "null":
 		exclude = exclude.split()
-		parameters['excludedIngredient'] = exclude
-	response = requests.get("http://api.yummly.com/v1/api/recipes", parameters)
+		roles.parameters['excludedIngredient'] = exclude
+	roles.parameters['maxResult'] = 9
+	roles.parameters['start'] = roles.pageNo
+	response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
 	data = response.json()
+	i = 0
+	while i < 9:
+		s = list(data['matches'][i]['smallImageUrls'][0])
+		s[-1] = '6'
+		s[-2] = '3'
+		s.append('0')
+		data['matches'][i]['smallImageUrls'][0] = "".join(s)
+		print(data['matches'][i]['smallImageUrls'][0])
+		i = i+1
+
+
 	return render_template('result.html', data=data)
 
 

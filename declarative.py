@@ -1,4 +1,3 @@
-
 import sqlalchemy
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import *
@@ -28,7 +27,7 @@ class Favourite(Base):
     user_id = Column(String(20), ForeignKey('USER.name'), primary_key=True)
     api_id = Column(String(50), ForeignKey('API.id'), primary_key=True)
     #position of the recipe (1st, 2nd, etc.)
-    #order = Column(Integer)
+    order = Column(Integer)
 
 class Recently(Base):
     __tablename__ = 'RECENTLY'
@@ -39,7 +38,14 @@ class Recently(Base):
 
 class Api(Base):
     __tablename__ = 'API'
-    id = Column(String(50), primary_key=True) #name of recipe
+    id = Column(String(100), primary_key=True) #id of recipe
+    name = Column(String(50), nullable=False)
+    image = Column(String(200), nullable=False)
+    rate5 = Column(Integer)
+    rate4 = Column(Integer)
+    rate3 = Column(Integer)
+    rate2 = Column(Integer)
+    rate1 = Column(Integer)
 
 class Info(Base):
     __tablename__ = 'USERINFO'
@@ -47,44 +53,7 @@ class Info(Base):
     email = Column(String(50), nullable=False)
     #birth = Column(String(10), nullable=False)
     #allergy = Column(String(100))
-"""
-class Survey(Base):
-    __tablename__ = 'SURVEY'
-    course = Column(String(15), ForeignKey('COURSE.course_name'), primary_key=True)
-    state = Column(String(15), nullable=False)
-    time = Column(String(50), nullable=False)
 
-class Question(Base):
-    __tablename__ = 'QUESTION'
-    question_text = Column(String(100), nullable=False, primary_key=True)
-    type = Column(String(2), nullable=False, primary_key=True)
-    requirement = Column(String(10), nullable=False)
-    deleted = Column(Boolean, nullable=False)
-
-
-class MCQuestion(Question):
-    __tablename__ = "MCQUESTION"
-    question_text = Column(String(100), ForeignKey('QUESTION.question_text'), primary_key=True)
-    options = Column(String(100))
-
-class FRQuestion(Question):
-    __tablename__ = "FRQUESTION"
-    question_text = Column(String(100), ForeignKey('QUESTION.question_text'), primary_key=True)
-
-
-class QuestionToSurvey(Base):
-    __tablename__ = 'QUESTION2SURVEY'
-    question_text = Column(String(100), ForeignKey('QUESTION.question_text'), primary_key=True)
-    survey = Column(String(15), ForeignKey('SURVEY.course'), primary_key=True)
-
-class Answer(Base):
-    __tablename__ = 'ANSWER'
-    answer_id = Column(Integer, primary_key=True)
-    question = Column(String(100)) #foreign key to question ?
-    survey = Column(String(15)) #foreign key to Survey ?
-    answer_text = Column(String(200), nullable=False)
-
-"""
 our_db = create_engine('sqlite:///recipe_sys.db')
 
 Base.metadata.create_all(our_db)

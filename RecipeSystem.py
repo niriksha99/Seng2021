@@ -37,25 +37,7 @@ class RecipeSystem:
                     except:
                         #print("This user has already been created")
                         pass
-    """
-    def add_user(self, zid, password, role):
-        #if (not (role == 'admin' or role == 'staff' or role == 'student')):
-            #return
-        if (not (isinstance(zid, int)) and not zid == 'admin'):
-            # print('zid not valid non-integer')
-            return
-        elif (isinstance(zid, int) and not ((zid >= 50 and zid <= 999))):
-            # print('zid not valid integer')
-            return
-        else:
-            new_user = User(id=zid, password=password, role=role)
-            try:
-                self.session.add(new_user)
-                self.session.commit()
-            except:
-                #print("This particular enrolment has already been created")
-                pass
-    """
+
     def add_user(self, username, password):
         new_user = User(name=username, password=password)
         try:
@@ -74,11 +56,11 @@ class RecipeSystem:
             print("This user information has already been persisted")
             pass
             
-    def add_recipe(self, username, recipe):
-        api = self.session.query(Api).filter(Api.id==recipe).first()
+    def add_fav_recipe(self, username, id, name, image):
+        api = self.session.query(Api).filter(Api.id==id).first()
         if api == None:
-            new_recipe = Api(id=recipe)
-            new_fav = Favourite(user_id=username, api_id=recipe)
+            new_recipe = Api(id=id, image=image, name=name, rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
+            new_fav = Favourite(user_id=username, api_id=id)
             try:
                 self.session.add(new_recipe)
                 self.session.add(new_fav)
@@ -87,9 +69,9 @@ class RecipeSystem:
                 print("Error saving new recipes")
                 pass
         else:
-            fav = self.session.query(Favourite).filter(and_(Favourite.api_id==recipe, Favourite.user_id==username)).first()
+            fav = self.session.query(Favourite).filter(and_(Favourite.api_id==id, Favourite.user_id==username)).first()
             if fav == None:
-                new_fav = Favourite(user_id=username, api_id=recipe)
+                new_fav = Favourite(user_id=username, api_id=id)
                 try:
                     self.session.add(new_fav)
                     self.session.commit()
@@ -103,12 +85,36 @@ class RecipeSystem:
         try:
             all_recipes = []
             result = self.session.query(Favourite).filter(Favourite.user_id==user).all()
-            for recipe in result:
-                all_recipes.append(recipe.api_id)
+            for i in result:
+                rec_id = i.api_id
+                recipe = self.session.query(Api).filter(Api.id==rec_id).first()
+                d = {"id":recipe.id, "name":recipe.name, "image":recipe.image}
+                all_recipes.append(d)
             return all_recipes
         except:
             print("Can't find user")
             pass
+    """
+    def get_recently_for(self, user):
+        try:
+            all_recipes = []
+            res1 = self.session.query(Recently).filter(and_(Recently.user_id==user, Recently.order==1)).first()
+            if res1 != None:
+                all_recipes.append(res1.api_id)
+            else:
+                return all_recipes
+            res2 = self.session.query(Recently).filter(and_(Recently.user_id==user, Recently.order==2)).first()
+            if res2 != None:
+                all_recipes.append(res2.api_id)
+            else:
+                return all_recipes
+            res3 = self.session.query(Recently).filter(and_(Recently.user_id==user, Recently.order==3)).first()
+            if res3 != None:
+                all_recipes.append(res3.api_id)
+            return all_recipes
+        except:
+            print("Can't find user")
+            pass"""
 
     def __init__(self, session):
         self.session = session

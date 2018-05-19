@@ -106,10 +106,29 @@
           <br>
           <p> &emsp; &emsp; &emsp; &emsp;To access the method for recipe, click on this link ->
           <a href={{data['attribution']['url']}}>{{data['name']}}</a></p>
+          {% if method %}
+            {% for instruction in method %}
+                <p> {{ instruction }} </p>
+                <br>
+            {% endfor %}
+          {% endif %}
           </div>
           <div class="col-lg-4 col-md-4 mb-5 element-animate" data-animate-effect="fadeInRight">
           <p> <img src = {{ data['images'][0]['hostedLargeUrl'] }}> </p>
           </div>
+          {% if login %}
+            {% if save %}
+              <button name="save" type="text" class="btn btn-dark mt-2 mt-sm-0" value="saved">Already saved recipe</button>
+              <br>
+              <br>
+            {% else %}
+              <form method="post">
+              <button name="save" type="submit" class="btn btn-dark mt-2 mt-sm-0" value="save">Save recipe</button>
+              </form>
+              <br>
+              <br>
+            {% endif %}
+          {% endif %}
       </div>
     </section>
 

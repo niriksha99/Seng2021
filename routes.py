@@ -33,6 +33,7 @@ def index():
 def dashboard():
 	if roles.login_role == 1:
 		fav_recipes = SS.get_fav_recipes_for(current_user.id)
+		#rec_recipes = SS.get_recently_for(current_user.id)
 		return render_template('user.html', user=current_user.id, data=fav_recipes)
 	else:
 		return render_template('401.html')
@@ -94,13 +95,13 @@ def get_recipe(recipeID):
 		fav = session.query(Favourite).filter(and_(Favourite.api_id==recipeID, Favourite.user_id==current_user.id)).first()
 		if fav != None:
 			save = 1
-			print(fav)
-	if request.method == 'POST':
-		SS.add_recipe(current_user.id, recipeID)
-		save = 1
 	response = requests.get("http://api.yummly.com/v1/api/recipe/" + recipeID + "?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744")
 	data = response.json()
-	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save)
+	if request.method == 'POST':
+		SS.add_fav_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'])
+		save = 1
+	method = scrape_yummly(data['attribution']['url'])
+	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method)
 
 
 #@app.errorhandler(404)

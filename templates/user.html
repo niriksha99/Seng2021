@@ -108,12 +108,14 @@
         </div>
         <div class="row">
           <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg" style="background-image: url('static/images/4.jpg')">
-              <div class="text">
-                <h2>Swiss Chicken</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
+            {% if data %}
+             {% for recipe in data %}
+			    <p>
+                <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} ">{{recipe['name']}}</a><br>
+                <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} "> <img src= "{{recipe['image']}}"> </a><br>
+			    </p>
+             {% endfor %}
+            {% endif %}
           </div>
         </div>
       </div>

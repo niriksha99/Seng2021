@@ -111,13 +111,15 @@
     <section class="feature-destination">
      <div class="container">
        <div class="row">
-      {% if data %}
-         {% for recipe in data['matches'] %}
+
+         {% if data %}
+            {% for recipe in data['matches'] %}
           <div class="col-md-4 element-animate ">
-          <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} " class="img-bg" style="background-image: url({{recipe['smallImageUrls'][0]}})">
-              <div class="text">
-              {{recipe['recipeName']}} <br>
-              Cook Time: {{(recipe['totalTimeInSeconds']/60)|round|int}} minutes<br>
+               <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['smallImageUrls'][0]}})">
+               <div class="text">
+               {{recipe['recipeName']}} <br>
+               Cook Time: {{(recipe['totalTimeInSeconds']|int /60)|round|int}} minutes<br>
+
               </div>
           </a>
           </div>

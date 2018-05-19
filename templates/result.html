@@ -112,13 +112,14 @@
      <div class="container">
        <div class="row">
 
-      {% if data %}
-         {% for recipe in data['matches'] %}
+         {% if data %}
+            {% for recipe in data['matches'] %}
           <div class="col-md-4 element-animate ">
-          <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} " class="img-bg" style="background-image: url({{recipe['smallImageUrls'][0]}})">
-              <div class="text">
-              {{recipe['recipeName']}} <br>
-              Cook Time: {{(recipe['totalTimeInSeconds']/60)|round|int}} minutes<br>
+               <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['smallImageUrls'][0]}})">
+               <div class="text">
+               {{recipe['recipeName']}} <br>
+               Cook Time: {{(recipe['totalTimeInSeconds']|int /60)|round|int}} minutes<br>
+
               </div>
           </a>
           </div>
@@ -128,6 +129,12 @@
           </div>
         </section>
 
+    {% for recipe in data['matches'] %}
+        {{recipe['smallImageUrls'][0]}}
+    {% endfor %}
+    <form method="post">
+    <button name="search" type="submit" class="btn btn-dark mt-2 mt-sm-0" value="next">Next Page</button>
+    </form>
     <!-- loader -->
     <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#f4b214"/></svg></div>
 

@@ -103,8 +103,6 @@ def scrape_yummly(url):
     if r.status_code != 200:
         print("request denied " + str(r.status_code))
         return method
-    else:
-        print("scraping " + url)
 
     soup = BeautifulSoup(r.text, "lxml")
 
@@ -117,27 +115,24 @@ def scrape_yummly(url):
     check = scraped[:29]
     print(check)
     if check == "http://www.onceuponachef.com/":
-        results = scrape_onceuponachef(scraped)
+        method = scrape_onceuponachef(scraped)
     check = scraped[:32]
     if check == "http://barefeetinthekitchen.com/":
-        results = scrape_barefeetinthekitchen(scraped)
+        method = scrape_barefeetinthekitchen(scraped)
     check = scraped[:27]
     if check == "http://thepioneerwoman.com/":
-        results = scrape_thepioneerwoman(scraped)
+        method = scrape_thepioneerwoman(scraped)
     check = scraped[:25]
     if check == "http://kalynskitchen.com/":
-        results = scrape_kalynskitchen(scraped)
-    else:
-        results = []
-    
-    for line in results:
-        method.append(line.contents[0])
+        method = scrape_kalynskitchen(scraped)
     
     return method
 
 def scrape_kalynskitchen(url):
     #url = "http://kalynskitchen.com/recipe-for-julia-childs-eggplant-pizzas/?utm_campaign=yummly&utm_medium=yummly&utm_source=yummly"
 
+    method = []
+    
     r = requests.get(url, headers=headers)
 
     if r.status_code != 200:
@@ -146,11 +141,18 @@ def scrape_kalynskitchen(url):
 
     soup = BeautifulSoup(r.text, "lxml")
 
-    return soup.find("div", "instructions").findAll("li")
+    results = soup.find("div", "instructions").findAll("li")
+    
+    for result in results:
+        method.append(result.contents[0])
+    
+    return method
 
 def scrape_thepioneerwoman(url):
     #url = "http://thepioneerwoman.com/cooking/dulce-de-leche-coffee/?utm_campaign=yummly&utm_medium=yummly&utm_source=yummly"
 
+    method = []
+    
     r = requests.get(url, headers=headers)
 
     if r.status_code != 200:
@@ -159,11 +161,18 @@ def scrape_thepioneerwoman(url):
 
     soup = BeautifulSoup(r.text, "lxml")
 
-    return soup.find("span", {"itemprop":"recipeInstructions"})
+    results = soup.find("span", {"itemprop":"recipeInstructions"})
+    
+    for result in results:
+        method.append(result.contents[0])
+    
+    return method
 
 def scrape_barefeetinthekitchen(url):
     #url = "http://barefeetinthekitchen.com/asian-steak-bites-recipe/?utm_campaign=yummly&utm_medium=yummly&utm_source=yummly"
 
+    method = []
+    
     r = requests.get(url, headers=headers)
 
     if r.status_code != 200:
@@ -172,11 +181,18 @@ def scrape_barefeetinthekitchen(url):
 
     soup = BeautifulSoup(r.text, "lxml")
 
-    return soup.find("div", "wprm-recipe-instruction-group").findAll("div", "wprm-recipe-instruction-text")
+    results = soup.find("div", "wprm-recipe-instruction-group").findAll("div", "wprm-recipe-instruction-text")
+    
+    for result in results:
+        method.append(result.contents[0])
+    
+    return method
 
 def scrape_onceuponachef(url):
     #url = "http://www.onceuponachef.com/recipes/kung-pao-chicken.html"
 
+    method = []
+    
     r = requests.get(url, headers=headers)
 
     if r.status_code != 200:
@@ -185,5 +201,9 @@ def scrape_onceuponachef(url):
 
     soup = BeautifulSoup(r.text, "lxml")
 
-    return soup.find("div", "recipe").findAll("li", "instruction")
+    results = soup.find("div", "instructions").findAll("li")
 
+    for result in results:
+        method.append(result.contents[0])
+    
+    return method

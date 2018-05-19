@@ -93,7 +93,7 @@
     <section class="site-section">
       <div class="container">
         <div class="row">
-          <div class="col-lg-8 col-md-8">
+          <div class="col-lg-9 col-md-9">
           <h3> &emsp; &emsp; &nbsp;Ingredients </h3>
           <br>
           <p>
@@ -107,9 +107,27 @@
           <p> &emsp; &emsp; &emsp; &emsp;To access the method for recipe, click on this link ->
           <a href={{data['attribution']['url']}}>{{data['name']}}</a></p>
           </div>
-          <div class="col-lg-4 col-md-4 mb-5 element-animate" data-animate-effect="fadeInRight">
+          <div class="col-lg-3 col-md-3 mb-5 element-animate">
           <p> <img src = {{ data['images'][0]['hostedLargeUrl'] }}> </p>
           </div>
+
+          <div>
+          {% if data %}
+             {% for recipe in data['matches'] %}
+           <div class="col-md-4 element-animate ">
+                <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['smallImageUrls'][0]}})">
+                <div class="text">
+                <h2>
+                {{recipe['recipeName']}} <br>
+                Cook Time: {{(recipe['totalTimeInSeconds']|int /60)|round|int}} minutes<br>
+                </h2>
+               </div>
+           </a>
+           </div>
+          {% endfor %}
+       {% endif %}
+     </div>
+
       </div>
     </section>
 

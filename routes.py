@@ -85,6 +85,26 @@ def show_results(ingredient, time, allergy, exclude):
 	data = process_request(ingredient, time, allergy, exclude)
 	return render_template('result.html', data=data)
 
+@app.route('/recipe_page/<ingredient>/<time>/<allergy>/<exclude>', methods=['GET','POST'])
+def show_similar_results(ingredient, time, allergy, exclude):
+	if request.method == 'POST':
+		button = request.form['search']
+		if button =="search":
+			returnValue = get_data()
+			ingredient = returnValue[0]
+			time = returnValue[1]
+			allergy = returnValue[2]
+			exclude = returnValue[3]
+			data = process_request(time)
+			return render_template('recipe_page.html', data=data)
+		roles.parameters['maxResult'] = 3
+		roles.parameters['start'] = roles
+		response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
+		data = response.json()
+		data = change_picture_size(data)
+		return render_template('recipe_page.html', data=data)
+	data = process_request(ingredient, time, allergy, exclude)
+	return render_template('recipe_page.html', data=data)
 
 @app.route('/recipes/<recipeID>', methods=['GET', 'POST'])
 def get_recipe(recipeID):

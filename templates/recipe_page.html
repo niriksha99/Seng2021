@@ -80,7 +80,7 @@
               </div>
               <h1>{{data['name']}}</h1>
               <br>
-              <p><b>Cooking time: </b>{{ (data['totalTimeInSeconds']/60)|round|int}} minutes </p>
+              <p><b>Cooking time: </b>{{ (data['totalTimeInSeconds']|int /60)|round|int}} minutes </p>
               <p><b>Servings: </b>{{ data['numberOfServings'] }} </p>
             </div>
 

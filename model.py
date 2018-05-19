@@ -20,7 +20,7 @@ def get_data():
 
 def process_request(ingredient, time, allergy, exclude):
     roles.pageNo = 0
-    roles.parameters = {"_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requiredPictures": "true"}
+    roles.parameters = {"_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requirePictures": "true"}
     ingredient = ingredient.split()
     roles.parameters['allowedIngredient'] = ingredient
     if time != "null":
@@ -46,11 +46,13 @@ def process_request(ingredient, time, allergy, exclude):
 def change_picture_size(data):
     i = 0
     while i < 9:
-        s = list(data['matches'][i]['smallImageUrls'][0])
+        s = list(data['matches'][i]['imageUrlsBySize']['90'])
+        s.pop(-1)
+        s.pop(-2)
         s[-1] = '6'
         s[-2] = '3'
         s.append('0')
-        data['matches'][i]['smallImageUrls'][0] = "".join(s)
+        data['matches'][i]['imageUrlsBySize']['90'] = "".join(s)
         i = i+1
     return data
 

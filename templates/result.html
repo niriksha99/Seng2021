@@ -117,9 +117,10 @@
           <div class="col-md-4 element-animate ">
                <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['smallImageUrls'][0]}})">
                <div class="text">
+               <h2>
                {{recipe['recipeName']}} <br>
                Cook Time: {{(recipe['totalTimeInSeconds']|int /60)|round|int}} minutes<br>
-
+               </h2>
               </div>
           </a>
           </div>

@@ -29,13 +29,13 @@
                   <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                 </li>
               <li class="nav-item">
-                <a class="nav-link">Recently Viewed</a>
+                <a class="nav-link" >Recently Viewed</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link">Favourite</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('logout') }}">Sign Out</a>
+                <a href="{{ url_for('index') }}" class="nav-link">Sign Out</a>
               </li>
             </ul>
 
@@ -43,7 +43,8 @@
         </div>
       </nav>
     </header>
-    <!-- END header-->
+    <!-- END header -->
+
 
     <section class="site-hero site-hero-innerpage overlay" data-stellar-background-ratio="0.5" style="background-image: url('static/images/centre_image.jpg');">
       <div class="container">
@@ -101,16 +102,49 @@
               </div>
             </a>
           </div>
+          <div class="col-md-4 element-animate ">
+            <a href="#" class="img-bg" style="background-image: url('static/images/2.jpg')">
+              <div class="text">
+                <h2>Chocolate Cheesecake</h2>
+                <p>Try this recipe</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-4 element-animate ">
+            <a href="#" class="img-bg last" style="background-image: url('static/images/3.png')">
+              <div class="text">
+                <h2>Curry Rice Salad</h2>
+                <p>Try this recipe</p>
+              </div>
+            </a>
+          </div>
         </div>
-
         <div class="mb-5 element-animate">
             <h1>Favourites...</h1>
         </div>
         <div class="row">
           <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg" style="background-image: url('static/images/4.jpg')">
+            {% if data %}
+             {% for recipe in data %}
+			    <p>
+                <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} ">{{recipe['name']}}</a><br>
+                <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} "> <img src= "{{recipe['image']}}"> </a><br>
+			    </p>
+             {% endfor %}
+            {% endif %}
+          </div>
+          <div class="col-md-4 element-animate ">
+            <a href="#" class="img-bg" style="background-image: url('static/images/5.jpg')">
               <div class="text">
-                <h2>Swiss Chicken</h2>
+                <h2>Aussie Meat Pie</h2>
+                <p>Try this recipe</p>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-4 element-animate ">
+            <a href="#" class="img-bg last" style="background-image: url('static/images/6.jpg')">
+              <div class="text">
+                <h2>Custard Vanilla Slice</h2>
                 <p>Try this recipe</p>
               </div>
             </a>

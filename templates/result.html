@@ -115,7 +115,7 @@
          {% if data %}
             {% for recipe in data['matches'] %}
           <div class="col-md-4 element-animate ">
-               <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['smallImageUrls'][0]}})">
+               <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['imageUrlsBySize']['90']}})">
                <div class="text">
                <h2>
                {{recipe['recipeName']}} <br>
@@ -146,7 +146,6 @@
 
           </div>
         </section>
-
 
 
     <!-- loader -->

@@ -35,6 +35,7 @@ def index():
 def dashboard():
 	if roles.login_role == 1:
 		fav_recipes = SS.get_fav_recipes_for(current_user.id)
+		#rec_recipes = SS.get_recently_for(current_user.id)
 		return render_template('user.html', user=current_user.id, data=fav_recipes)
 	else:
 		return render_template('401.html')
@@ -56,13 +57,11 @@ def register():
 		return redirect(url_for("index"))
 	return render_template('sign-up-form.html', error=0)
 
-@app.route('/results/<ingredient>/<time>/<allergy>/<exclude>/<recipeID>', methods=['GET','POST'])
+@app.route('/results/<ingredient>/<time>/<allergy>/<exclude>', methods=['GET','POST'])
 #@login_required
-def show_results(ingredient, time, allergy, exclude, recipeID):
+def show_results(ingredient, time, allergy, exclude):
 	#results = SS.get_results(course)
 	#results_data = SS.get_results_data(results)
-	global list
-	list[]
 	if request.method == 'POST':
 		button = request.form['search']
 		if button =="search":
@@ -71,10 +70,39 @@ def show_results(ingredient, time, allergy, exclude, recipeID):
 			time = returnValue[1]
 			allergy = returnValue[2]
 			exclude = returnValue[3]
-			data = process_request(ingredient, time, allergy, exclude, recipeID)
-			if similar < 10
-				list.insert(similar, recipeID)
-				similar = similar + 1
+			data = process_request(ingredient, time, allergy, exclude)
+			return render_template('result.html', data=data)
+		elif button == "next":
+			roles.pageNo = roles.pageNo + 9
+		elif button == "previous":
+			roles.pageNo = roles.pageNo - 9
+		roles.parameters['maxResult'] = 9
+		roles.parameters['start'] = roles.pageNo
+		response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
+		data = response.json()
+		data = change_picture_size(data)
+		secondPage = "false"
+		if roles.pageNo != 0:
+			secondPage = "true"
+		return render_template('result.html', data=data, second=secondPage)
+	allergy = trim_allergy(allergy)
+	data = process_request(ingredient, time, allergy, exclude)
+	return render_template('result.html', data=data)
+
+@app.route('/user/<ingredient>/<time>/<allergy>/<exclude>', methods=['GET','POST'])
+#@login_required
+def show_user_results(ingredient, time, allergy, exclude):
+	#results = SS.get_results(course)
+	#results_data = SS.get_results_data(results)
+	if request.method == 'POST':
+		button = request.form['search']
+		if button =="search":
+			returnValue = get_data()
+			ingredient = returnValue[0]
+			time = returnValue[1]
+			allergy = returnValue[2]
+			exclude = returnValue[3]
+			data = process_request(ingredient, time, allergy, exclude)
 			return render_template('result.html', data=data)
 		elif button == "next":
 			roles.pageNo = roles.pageNo + 9
@@ -102,13 +130,13 @@ def get_recipe(recipeID):
 		fav = session.query(Favourite).filter(and_(Favourite.api_id==recipeID, Favourite.user_id==current_user.id)).first()
 		if fav != None:
 			save = 1
-			print(fav)
-	if request.method == 'POST':
-		SS.add_recipe(current_user.id, recipeID)
-		save = 1
 	response = requests.get("http://api.yummly.com/v1/api/recipe/" + recipeID + "?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744")
 	data = response.json()
-	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save)
+	if request.method == 'POST':
+		SS.add_fav_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'])
+		save = 1
+	method = scrape_yummly(data['attribution']['url'])
+	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method)
 
 
 #@app.errorhandler(404)

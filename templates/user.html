@@ -133,7 +133,7 @@
 			    </p>
           </div>
           -->
-        <div class="col-md-4 element-animate ">
+          <div class="col-md-4 element-animate ">
           <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
             <div class="text">
               <h2>
@@ -144,15 +144,6 @@
       </div>
           {% endfor %}
           {% endif %}
-          {{data}}
-          <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg" style="background-image: url('static/images/5.jpg')">
-              <div class="text">
-                <h2>Aussie Meat Pie</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
         </div>
       </div>
     </section>

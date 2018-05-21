@@ -28,6 +28,7 @@ def index():
 		print(allergy)
 		exclude = returnValue[3]
 		return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
+	#recommend_recipe = get_recommend()
 	return render_template('home.html', error=0, login=roles.login_role)
 
 # user
@@ -148,6 +149,14 @@ def get_recipe(recipeID):
 		SS.add_fav_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'])
 		save = 1
 	method = scrape_yummly(data['attribution']['url'])
+	"""
+	recipe = session.query(Api).filter(Api.id==recipeID).first()
+	rating = 0
+	if recipe != None:
+	    #sum = recipe.rate1 + recipe.rate2 + recipe.rate3 + recipe.rate4 + recipe.rate5
+	    #rating = ((recipe.rate1 * 1) + (recipe.rate2 * 2) + (recipe.rate3 * 3) + (recipe.rate4 * 4) + (recipe.rate5 * 5)) / sum
+	    rating = reipce.rate
+	"""
 	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method)
 
 @app.route('/my_favorite')

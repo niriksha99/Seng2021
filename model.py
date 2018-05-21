@@ -86,3 +86,5 @@ def  trim_allergy(allergy):
     allergy = "".join(l)
     return allergy
 
+def rate(recipeID, rating):
+    SS.rate_recipe(recipeID, rating)

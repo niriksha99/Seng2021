@@ -42,11 +42,16 @@ class Api(Base):
     name = Column(String(50), nullable=False)
     image = Column(String(200), nullable=False)
     time = Column(Integer, nullable=False)
+    """
     rate5 = Column(Integer)
     rate4 = Column(Integer)
     rate3 = Column(Integer)
     rate2 = Column(Integer)
     rate1 = Column(Integer)
+    """
+    rate = Column(Float) #actually rate
+    total_count = Column(Integer) #value
+    total = Column(Integer) #number of users have rated
 
 class Info(Base):
     __tablename__ = 'USERINFO'

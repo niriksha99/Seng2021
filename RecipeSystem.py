@@ -56,17 +56,26 @@ class RecipeSystem:
             print("This user information has already been persisted")
             pass
 
+    def add_recipe(self, username, id, name, image, time):
+        new_recipe = Api(id=id, image=image, name=name, time=time, rate=0, total=0)#rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
+        try:
+            self.session.add(new_recipe)
+            self.session.commit()
+        except:
+            print("Error saving new recipes")
+            pass
+    
     def add_fav_recipe(self, username, id, name, image, time):
         api = self.session.query(Api).filter(Api.id==id).first()
         if api == None:
-            new_recipe = Api(id=id, image=image, name=name, time=time, rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
+            #new_recipe = Api(id=id, image=image, name=name, time=time, rate=0, total=0)#rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
+            add_recipe(id, name, image, time)
             new_fav = Favourite(user_id=username, api_id=id)
             try:
-                self.session.add(new_recipe)
                 self.session.add(new_fav)
                 self.session.commit()
             except:
-                print("Error saving new recipes")
+                print("Error saving new favourite recipes")
                 pass
         else:
             fav = self.session.query(Favourite).filter(and_(Favourite.api_id==id, Favourite.user_id==username)).first()
@@ -115,6 +124,31 @@ class RecipeSystem:
         except:
             print("Can't find user")
             pass"""
+    
+    def get_recommend(self):
+        try:
+            all_recipes = []
+            result = self.session.query(Api).order_by(Api.rate.desc()).all()
+            for i in result:
+                rec_id = i.api_id
+                recipe = self.session.query(Api).filter(Api.id==rec_id).first()
+                d = {"id":recipe.id, "name":recipe.name, "image":recipe.image, "time":recipe.time, "rate":recipe.rate}
+                all_recipes.append(d)
+            return all_recipes
+        except:
+            print("Can't find recipe")
+            pass
+    
+    def rate_recipe(self, id, rating):
+        try:
+            result = self.session.query(Api).filter(Api.id==id).first()
+            result.total = result.total + 1
+            result.total_count = result.total_count + rating
+            result.rate = result.total_count / result.total
+            self.session.commit()
+        except:
+            print("Can't find recipe")
+            pass
 
     def __init__(self, session):
         self.session = session

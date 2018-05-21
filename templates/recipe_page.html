@@ -38,7 +38,7 @@
                 <a class="nav-link">Recently Viewed</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link">Favourite</a>
+                <a class="nav-link" href="{{ url_for('favourite') }}">Favourite</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{url_for('logout')}}">Sign Out</a>
@@ -74,21 +74,35 @@
         <div class="row align-items-center site-hero-inner justify-content-center">
           <div class="col-md-8 text-center">
               <div class="mb-5 element-animate">
+              <!--
               <div data-animate-effect="fadeInLeft">
+                  <br>
+                  <br>
                   <p> <img src = {{ data['images'][0]['hostedLargeUrl'] }}> </p>
               </div>
+              -->
               <h1>{{data['name']}}</h1>
               <br>
+              <p><b>Average rating: </b></p>
               <p><b>Cooking time: </b>{{ (data['totalTimeInSeconds']|int /60)|round|int}} minutes </p>
               <p><b>Servings: </b>{{ data['numberOfServings'] }} </p>
             </div>
-
           </div>
+        </div>
+      </div>
+      <div class="row element-animate pt-5">
+        <div class="col-6 text-left mb-3">
+        <button onclick="goBack()" class="btn btn-dark"> Back to Results </a></button>
+        <script>
+        function goBack() {
+          window.history.back();
+        }
+        </script>
         </div>
       </div>
     </section>
     <!-- END section -->
-
+    <br>
     <section class="site-section">
       <div class="container">
         <div class="row">
@@ -113,8 +127,8 @@
           {% endif %}
           </div>
           <div class="col-lg-4 col-md-4 mb-5 element-animate">
+          <p> Rate this recipe </p>
           <p> <img src = {{ data['images'][0]['hostedLargeUrl'] }}> </p>
-          </div>
           {% if login %}
             {% if save %}
               <button name="save" type="text" class="btn btn-dark mt-2 mt-sm-0" value="saved">Already saved recipe</button>
@@ -128,6 +142,7 @@
               <br>
             {% endif %}
           {% endif %}
+          </div>
       </div>
     </section>
 

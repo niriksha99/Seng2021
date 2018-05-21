@@ -16,7 +16,8 @@
 
   <!-- Theme Style -->
   <link rel="stylesheet" href="{{url_for("static",filename="css/style.css")}}">
-</head>
+  </head>
+
   <body>
 
     <header role="banner">
@@ -29,13 +30,13 @@
                 <a class="nav-link" href="{{ url_for('index') }}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link">Recently Viewed</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link">Sign Out</a>
+                <a class="nav-link" href="{{url_for('logout')}}">Sign Out</a>
               </li>
             </ul>
 
@@ -45,11 +46,7 @@
     </header>
     <!-- END header -->
 
-<<<<<<< HEAD
     <section class="site-hero site-hero-innerpage overlay" data-stellar-background-ratio="0.5" style="background-image: url('/static/images/centre_image.jpg');">
-=======
-    <section class="site-hero site-hero-innerpage overlay" data-stellar-background-ratio="0.5" style="background-image: url('static/images/centre_image.jpg');">
->>>>>>> ef17ba712d9cccb32deac1dbed5b8eb9243c019c
       <div class="container">
         <div class="row align-items-center site-hero-inner justify-content-center">
           <div class="col-md-8 text-center">
@@ -65,38 +62,26 @@
     </section>
     <!-- END section -->
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> ef17ba712d9cccb32deac1dbed5b8eb9243c019c
-
-    <!-- END section -->
-
-    <div class="row">
-      {% if data %}
-      {% for recipe in data %}
-      <!--
-      <div class="col-md-4 element-animate ">
-      <p>
-            <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} ">{{recipe['name']}}</a><br>
-            <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} "> <img src= "{{recipe['image']}}"> </a><br>
-      </p>
-      </div>
-      -->
-      <div class="col-md-4 element-animate ">
-      <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
-        <div class="text">
-          <h2>
-            {{recipe['name']}} <br>
-          </h2>
+    <section class="slider-wrap site-section">
+      <div class="container">
+        <div class="row">
+          {% if data %}
+          {% set count = 0 %}
+          {% for recipe in data %}
+            {% for count < 3 %}
+            <div class="col-md-4 element-animate ">
+              <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
+                <div class="text">
+                  <h2> {{recipe['name']}} <br> </h2>
+                </div>
+              </a>
+            </div>
+            {% set count = count + 1 %}
+          {% endfor %}
+          {% endif %}
         </div>
-      </a>
-  </div>
-      {% endfor %}
-      {% endif %}
-    </div>
+      </div>
+    </section>
 
 
     <!-- loader -->

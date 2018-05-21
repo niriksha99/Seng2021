@@ -120,9 +120,10 @@
           </div>
         </div>
         <div class="mb-5 element-animate">
-            <h1>Favourites...</h1>
+            <a href="{{ url_for('my_favorite') }}"> <h1>Favourite...</h1></a>
         </div>
         <div class="row">
+          {% set i = 3 %}
           {% if data %}
           {% for recipe in data %}
           <!--
@@ -133,6 +134,7 @@
 			    </p>
           </div>
           -->
+          {% if loop.index <= 3 %}
           <div class="col-md-4 element-animate ">
           <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
             <div class="text">
@@ -142,6 +144,7 @@
             </div>
           </a>
       </div>
+          {% endif %}
           {% endfor %}
           {% endif %}
         </div>

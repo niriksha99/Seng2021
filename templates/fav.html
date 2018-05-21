@@ -66,9 +66,7 @@
       <div class="container">
         <div class="row">
           {% if data %}
-          {% set count = 0 %}
           {% for recipe in data %}
-            {% for count < 3 %}
             <div class="col-md-4 element-animate ">
               <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
                 <div class="text">
@@ -76,7 +74,6 @@
                 </div>
               </a>
             </div>
-            {% set count = count + 1 %}
           {% endfor %}
           {% endif %}
         </div>

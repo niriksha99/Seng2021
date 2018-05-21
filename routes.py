@@ -149,6 +149,13 @@ def get_recipe(recipeID):
 	method = scrape_yummly(data['attribution']['url'])
 	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method)
 
+@app.route('/my_favorite')
+def my_favorite():
+	if roles.login_role == 1:
+		fav_recipes = SS.get_fav_recipes_for(current_user.id)
+		#rec_recipes = SS.get_recently_for(current_user.id)
+	return render_template('fav.html', user=current_user.id, data=fav_recipes)
+
 
 #@app.errorhandler(404)
 def page_not_found(e):

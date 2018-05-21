@@ -41,6 +41,7 @@ class Api(Base):
     id = Column(String(100), primary_key=True) #id of recipe
     name = Column(String(50), nullable=False)
     image = Column(String(200), nullable=False)
+    time = Column(Integer, nullable=False)
     rate5 = Column(Integer)
     rate4 = Column(Integer)
     rate3 = Column(Integer)

@@ -7,6 +7,7 @@ import json
 import roles
 import requests
 from model import *
+from scrape import *
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -144,7 +145,7 @@ def get_recipe(recipeID):
 	response = requests.get("http://api.yummly.com/v1/api/recipe/" + recipeID + "?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744")
 	data = response.json()
 	if request.method == 'POST':
-		SS.add_fav_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'])
+		SS.add_fav_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'])
 		save = 1
 	method = scrape_yummly(data['attribution']['url'])
 	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method)

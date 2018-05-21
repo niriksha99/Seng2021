@@ -56,10 +56,10 @@ class RecipeSystem:
             print("This user information has already been persisted")
             pass
 
-    def add_fav_recipe(self, username, id, name, image):
+    def add_fav_recipe(self, username, id, name, image, time):
         api = self.session.query(Api).filter(Api.id==id).first()
         if api == None:
-            new_recipe = Api(id=id, image=image, name=name, rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
+            new_recipe = Api(id=id, image=image, name=name, time=time, rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
             new_fav = Favourite(user_id=username, api_id=id)
             try:
                 self.session.add(new_recipe)
@@ -88,7 +88,7 @@ class RecipeSystem:
             for i in result:
                 rec_id = i.api_id
                 recipe = self.session.query(Api).filter(Api.id==rec_id).first()
-                d = {"id":recipe.id, "name":recipe.name, "image":recipe.image}
+                d = {"id":recipe.id, "name":recipe.name, "image":recipe.image, "time":recipe.time}
                 all_recipes.append(d)
             return all_recipes
         except:

@@ -123,32 +123,27 @@
             <h1>Favourites...</h1>
         </div>
         <div class="row">
+          {% if data %}
+          {% for recipe in data %}
+          <!--
           <div class="col-md-4 element-animate ">
-            {% if data %}
-             {% for recipe in data %}
 			    <p>
                 <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} ">{{recipe['name']}}</a><br>
                 <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} "> <img src= "{{recipe['image']}}"> </a><br>
 			    </p>
-             {% endfor %}
-            {% endif %}
           </div>
+          -->
           <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg" style="background-image: url('static/images/5.jpg')">
-              <div class="text">
-                <h2>Aussie Meat Pie</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg last" style="background-image: url('static/images/6.jpg')">
-              <div class="text">
-                <h2>Custard Vanilla Slice</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
+          <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
+            <div class="text">
+              <h2>
+                {{recipe['name']}} <br>
+              </h2>
+            </div>
+          </a>
+      </div>
+          {% endfor %}
+          {% endif %}
         </div>
       </div>
     </section>

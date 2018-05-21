@@ -33,6 +33,17 @@ def index():
 @app.route('/dashboard/', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+	if request.method == 'POST':
+		button = request.form['search']
+		print("request is " + button)
+		returnValue = get_data()
+		ingredient = returnValue[0]
+		time = returnValue[1]
+		allergy = returnValue[2]
+		print("allergy is ")
+		print(allergy)
+		exclude = returnValue[3]
+		return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
 	if roles.login_role == 1:
 		fav_recipes = SS.get_fav_recipes_for(current_user.id)
 		#rec_recipes = SS.get_recently_for(current_user.id)

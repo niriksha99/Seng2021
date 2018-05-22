@@ -100,6 +100,8 @@ def show_results(ingredient, time, allergy, exclude):
 		return render_template('result.html', data=data, second=secondPage)
 	if roles.back == 1:
 		roles.back == 0
+		if not roles.parameters:
+			return redirect(url_for("index"))
 		response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
 		data = response.json()
 		data = change_picture_size(data)

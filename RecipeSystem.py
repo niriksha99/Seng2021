@@ -76,6 +76,31 @@ class RecipeSystem:
         except:
             print("Can't find user")
             pass
+
+    def add_recent_recipe(self, username, id, name, image, time):
+        api = self.session.query(Api).filter(Api.id==id).first()
+        if api == None:
+            #new_recipe = Api(id=id, image=image, name=name, time=time, rate=0, total=0)#rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
+            self.add_recipe(id, name, image, time)
+            new_recent = Recently(user_id=username, api_id=id)
+            try:
+                self.session.add(new_recent)
+                self.session.commit()
+            except:
+                print("Error saving new favourite recipes")
+                pass
+        else:
+            recent = self.session.query(Recently).filter(and_(Recently.api_id==id, Recently.user_id==username)).first()
+            if recent == None:
+                new_recent = Recently(user_id=username, api_id=id)
+                try:
+                    self.session.add(new_recent)
+                    self.session.commit()
+                except:
+                    print("Error saving new recipes")
+                    pass
+            else:
+                print("This recipe has already been persisted")
     """
     def get_recently_for(self, user):
         try:

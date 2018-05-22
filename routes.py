@@ -151,15 +151,16 @@ def get_recipe(recipeID):
 	save = 0
 	isRated = 0
 	rating = 0
+	response = requests.get("http://api.yummly.com/v1/api/recipe/" + recipeID + "?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744")
+	data = response.json()
 	if roles.login_role == 1:
+		SS.add_recent_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'])
 		fav = session.query(Favourite).filter(and_(Favourite.api_id==recipeID, Favourite.user_id==current_user.id)).first()
 		if fav != None:
 			save = 1
 		rating = session.query(Rating).filter(and_(Rating.api_id==recipeID, Rating.user_id==current_user.id)).first()
 		if rating != None:
 			isRated = 1
-	response = requests.get("http://api.yummly.com/v1/api/recipe/" + recipeID + "?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744")
-	data = response.json()
 	if request.method == 'POST':
 		button = request.form['save']
 		print("button is ")

@@ -24,12 +24,12 @@ def index():
 		ingredient = returnValue[0]
 		time = returnValue[1]
 		allergy = returnValue[2]
-		print("allergy is ")
-		print(allergy)
 		exclude = returnValue[3]
 		return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
 	#recommend_recipe = get_recommend()
-	return render_template('home.html', error=0, login=roles.login_role)
+	data = []
+	data = SS.get_recommend()
+	return render_template('home.html', error=0, login=roles.login_role, data=data)
 
 # user
 @app.route('/dashboard/', methods=['GET', 'POST'])
@@ -98,6 +98,15 @@ def show_results(ingredient, time, allergy, exclude):
 		if roles.pageNo != 0:
 			secondPage = "true"
 		return render_template('result.html', data=data, second=secondPage)
+	if roles.back == 1:
+		roles.back == 0
+		response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
+		data = response.json()
+		data = change_picture_size(data)
+		secondPage = "false"
+		if roles.pageNo != 0:
+			secondPage = "true"
+		return render_template('result.html', data=data, second=secondPage)
 	allergy = trim_allergy(allergy)
 	data = process_request(ingredient, time, allergy, exclude)
 	return render_template('result.html', data=data)
@@ -130,6 +139,7 @@ def show_user_results(ingredient, time, allergy, exclude):
 		if roles.pageNo != 0:
 			secondPage = "true"
 		return render_template('result.html', data=data, second=secondPage)
+
 	allergy = trim_allergy(allergy)
 	data = process_request(ingredient, time, allergy, exclude)
 	return render_template('result.html', data=data)
@@ -139,25 +149,47 @@ def show_user_results(ingredient, time, allergy, exclude):
 def get_recipe(recipeID):
 	# incomplete
 	save = 0
+	isRated = 0
+	rating = 0
 	if roles.login_role == 1:
 		fav = session.query(Favourite).filter(and_(Favourite.api_id==recipeID, Favourite.user_id==current_user.id)).first()
 		if fav != None:
 			save = 1
+		rating = session.query(Rating).filter(and_(Rating.api_id==recipeID, Rating.user_id==current_user.id)).first()
+		if rating != None:
+			isRated = 1
 	response = requests.get("http://api.yummly.com/v1/api/recipe/" + recipeID + "?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744")
 	data = response.json()
 	if request.method == 'POST':
-		SS.add_fav_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'])
-		save = 1
+		button = request.form['save']
+		print("button is ")
+		print(button)
+		if button == "save":
+			SS.add_fav_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'])
+			save = 1
+		elif button == "back":
+			print("I'm here")
+			ingredient = null
+			time = null
+			allergy = null
+			exclude = null
+			roles.back = 1
+			return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
+		else:
+			score = int(button)
+			print("print is")
+			print(score)
+			SS.rate_recipe(current_user.id, recipeID, score, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'])
+			isRated = 1
+
 	method = scrape_yummly(data['attribution']['url'])
-	"""
 	recipe = session.query(Api).filter(Api.id==recipeID).first()
-	rating = 0
 	if recipe != None:
 	    #sum = recipe.rate1 + recipe.rate2 + recipe.rate3 + recipe.rate4 + recipe.rate5
 	    #rating = ((recipe.rate1 * 1) + (recipe.rate2 * 2) + (recipe.rate3 * 3) + (recipe.rate4 * 4) + (recipe.rate5 * 5)) / sum
-	    rating = reipce.rate
-	"""
-	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method)
+		rating = recipe.rate
+		print(rating)
+	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method, isRated=isRated, rating=rating)
 
 @app.route('/my_favorite')
 def my_favorite():

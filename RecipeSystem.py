@@ -9,34 +9,6 @@ from declarative import *
 
 class RecipeSystem:
 
-    def add_all_courses(self, courses_file):
-        with open(courses_file, 'r') as courses_in:
-            for row in list(csv.reader(courses_in)):
-                course_name = row[0] + ' ' + row[1]
-                new_course = Course(course_name=course_name)
-                new_survey = Survey(course=course_name, state="to_create",time="infinity")
-                try:
-                    self.session.add(new_course)
-                    self.session.add(new_survey)
-                    self.session.commit()
-                    print(course_name)
-                except:
-                    #print("This course has already been added")
-                    pass
-
-    def add_all_users(self, users_file):
-        with open(users_file, 'r') as entry_in:
-                for row in list(csv.reader(entry_in)):
-                    zid = row[0]
-                    password = row[1]
-                    role = row[2]
-                    new_entry = User(id=zid, password=password, role=role)
-                    try:
-                        self.session.add(new_entry)
-                        self.session.commit()
-                    except:
-                        #print("This user has already been created")
-                        pass
 
     def add_user(self, username, password):
         new_user = User(name=username, password=password)
@@ -56,20 +28,21 @@ class RecipeSystem:
             print("This user information has already been persisted")
             pass
 
-    def add_recipe(self, username, id, name, image, time):
-        new_recipe = Api(id=id, image=image, name=name, time=time, rate=0, total=0)#rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
+    def add_recipe(self, id, name, image, time):
+        new_recipe = Api(id=id, image=image, name=name, time=time, rate=0, total_count=0, total=0)#rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
         try:
             self.session.add(new_recipe)
             self.session.commit()
+            print("succeed in adding recipe")
         except:
             print("Error saving new recipes")
             pass
-    
+
     def add_fav_recipe(self, username, id, name, image, time):
         api = self.session.query(Api).filter(Api.id==id).first()
         if api == None:
             #new_recipe = Api(id=id, image=image, name=name, time=time, rate=0, total=0)#rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
-            add_recipe(id, name, image, time)
+            self.add_recipe(id, name, image, time)
             new_fav = Favourite(user_id=username, api_id=id)
             try:
                 self.session.add(new_fav)
@@ -124,30 +97,53 @@ class RecipeSystem:
         except:
             print("Can't find user")
             pass"""
-    
+
     def get_recommend(self):
         try:
             all_recipes = []
             result = self.session.query(Api).order_by(Api.rate.desc()).all()
+            print("result is ")
+            print(result)
+            j = 0
             for i in result:
-                rec_id = i.api_id
+                if j ==  6:
+                    break
+                rec_id = i.id
                 recipe = self.session.query(Api).filter(Api.id==rec_id).first()
-                d = {"id":recipe.id, "name":recipe.name, "image":recipe.image, "time":recipe.time, "rate":recipe.rate}
+                d = {}
+                d['id'] = recipe.id
+                d['name'] = recipe.name
+                d['image'] = recipe.image
+                d['time'] = recipe.time
+                d['rate'] = recipe.rate
                 all_recipes.append(d)
+                j = j + 1
             return all_recipes
         except:
             print("Can't find recipe")
             pass
-    
-    def rate_recipe(self, id, rating):
+
+    def rate_recipe(self, username, id, rating, recipeID, name, image, time):
         try:
             result = self.session.query(Api).filter(Api.id==id).first()
+            if result == None:
+                self.add_recipe(recipeID, name, image, time)
+                result = self.session.query(Api).filter(Api.id==id).first()
+                new_rating = Rating(user_id=username, api_id=id)
+            try:
+                self.session.add(new_rating)
+                self.session.commit()
+            except:
+                print("Error saving new favourite recipes")
+                pass
             result.total = result.total + 1
             result.total_count = result.total_count + rating
             result.rate = result.total_count / result.total
+            print(result.total)
+            print(result.total_count)
+            print(result.rate)
             self.session.commit()
         except:
-            print("Can't find recipe")
             pass
 
     def __init__(self, session):

@@ -118,60 +118,23 @@
     <section class="feature-destination">
       <div class="container">
         <div class="row">
-          <div class="col-md-4 element-animate ">
-          <a href="#" class="img-bg" style="background-image: url('static/images/1.jpg')">
-            <div class="text">
-              <h2>Piroshki</h2>
-              <p>Try this recipe</p>
-            </div>
-          </a>
-          </div>
-          <div class="col-md-4 element-animate ">
-          <a href="#" class="img-bg" style="background-image: url('static/images/2.jpg')">
-            <div class="text">
-              <h2>Chocolate Cheesecake</h2>
-              <p>Try this recipe</p>
-            </div>
-          </a>
-          </div>
-          <div class="col-md-4 element-animate ">
-          <a href="#" class="img-bg" style="background-image: url('static/images/3.png')">
-            <div class="text">
-              <h2>Curry Rice Salad</h2>
-              <p>Try this recipe</p>
-            </div>
-          </a>
-          </div>
+          {% if data %}
+             {% for recipe in data %}
+           <div class="col-md-4 element-animate ">
+                <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
+                <div class="text">
+                <h2>
+                {{recipe['name']}} <br>
+                Cook Time: {{(recipe['time']|int /60)|round|int}} minutes<br>
+                Average rating: {{recipe['rate']}}
+                </h2>
+                </div>
+                </a>
+           </div>
+          {% endfor %}
+       {% endif %}
+             </div>
         </div>
-
-
-        <div class="row">
-          <div class="col-md-4 element-animate ">
-          <a href="#" class="img-bg" style="background-image: url('static/images/4.jpg')">
-            <div class="text">
-              <h2>Swiss Chicken</h2>
-              <p>Try this recipe</p>
-            </div>
-          </a>
-          </div>
-          <div class="col-md-4 element-animate ">
-          <a href="#" class="img-bg" style="background-image: url('static/images/5.jpg')">
-            <div class="text">
-              <h2>Aussie Meat Pie</h2>
-              <p>Try this recipe</p>
-            </div>
-          </a>
-          </div>
-          <div class="col-md-4 element-animate ">
-          <a href="#" class="img-bg last" style="background-image: url('static/images/6.jpg')">
-            <div class="text">
-              <h2>Custard Vanilla Slice</h2>
-              <p>Try this recipe</p>
-            </div>
-          </a>
-          </div>
-        </div>
-      </div>
     </section>
     <!-- END section -->
 

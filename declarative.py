@@ -29,6 +29,13 @@ class Favourite(Base):
     #position of the recipe (1st, 2nd, etc.)
     order = Column(Integer)
 
+class Rating(Base):
+    __tablename__ = 'Rating'
+    user_id = Column(String(20), ForeignKey('USER.name'), primary_key=True)
+    api_id = Column(String(50), ForeignKey('API.id'), primary_key=True)
+    #position of the recipe (1st, 2nd, etc.)
+    order = Column(Integer)
+
 class Recently(Base):
     __tablename__ = 'RECENTLY'
     user_id = Column(String(20), ForeignKey('USER.name'), primary_key=True)

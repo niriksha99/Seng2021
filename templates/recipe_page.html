@@ -83,7 +83,11 @@
               -->
               <h1>{{data['name']}}</h1>
               <br>
-              <p><b>Average rating: </b></p>
+              {% if rating %}
+              <p><b>Average rating: {{rating}} </b></p>
+              {% else %}
+              <p><b>No rating has been received.</b></p>
+              {% endif %}
               <p><b>Cooking time: </b>{{ (data['totalTimeInSeconds']|int /60)|round|int}} minutes </p>
               <p><b>Servings: </b>{{ data['numberOfServings'] }} </p>
             </div>
@@ -92,12 +96,17 @@
       </div>
       <div class="row element-animate pt-5">
         <div class="col-6 text-left mb-3">
+        <form method="post">
+        <button name="save" type="submit" class="btn btn-dark mt-2 mt-sm-0" value="back">Back</button>
+       </form>
+        <!--
         <button onclick="goBack()" class="btn btn-dark"> Back </a></button>
         <script>
         function goBack() {
           window.history.back();
         }
         </script>
+        -->
         </div>
       </div>
     </section>
@@ -127,7 +136,30 @@
           {% endif %}
           </div>
           <div class="col-lg-4 col-md-4 mb-5 element-animate">
-          <p> Rate this recipe </p>
+            {% if login %}
+              {% if isRated %}
+                  You've rated this recipe.
+              {% else %}
+          <p>
+            <div id="starBg" class="star_bg">
+            <form method="post">
+              Rate:
+              <input type="radio" id="starScore1" class="score score_1" value="1" name="save">
+              <a href="#starScore1" class="star star_1" title="really bad"><label for="starScore1">1</label></a>
+              <input type="radio" id="starScore2" class="score score_2" value="2" name="save">
+              <a href="#starScore2" class="star star_2" title="bad"><label for="starScore2">2</label></a>
+              <input type="radio" id="starScore3" class="score score_3" value="3" name="save">
+              <a href="#starScore3" class="star star_3" title="so so"><label for="starScore3">3</label></a>
+              <input type="radio" id="starScore4" class="score score_4" value="4" name="save">
+              <a href="#starScore4" class="star star_4" title="good"><label for="starScore4">4</label></a>
+              <input type="radio" id="starScore5" class="score score_5" value="5" name="save">
+              <a href="#5" class="star star_5" title="very good"><label for="starScore5">5</label></a>&emsp;
+              <input type="submit" value="submit"></button>
+            </form>
+            </div>
+         </p>
+            {% endif %}
+         {% endif %}
           <p> <img src = {{ data['images'][0]['hostedLargeUrl'] }}> </p>
           {% if login %}
             {% if save %}

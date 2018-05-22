@@ -20,7 +20,7 @@ class RecipeSystem:
             pass
 
     def add_user_info(self, username, email):#, birth, allergy):
-        new_signup = Info(user_id=username, email=email)#, birth=birth, allergy=allergy)
+        new_signup = Info(user_id=username, email=email, num_recent=0)#, birth=birth, allergy=allergy)
         try:
             self.session.add(new_signup)
             self.session.commit()
@@ -77,17 +77,17 @@ class RecipeSystem:
             print("Can't find user")
             pass
 
-    def add_recent_recipe(self, username, id, name, image, time):
+    def add_recent_recipe(self, username, id, name, image, time, order):
         api = self.session.query(Api).filter(Api.id==id).first()
         if api == None:
             #new_recipe = Api(id=id, image=image, name=name, time=time, rate=0, total=0)#rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
             self.add_recipe(id, name, image, time)
-            new_recent = Recently(user_id=username, api_id=id)
+            new_recent = Recently(user_id=username, api_id=id, order=order)
             try:
                 self.session.add(new_recent)
                 self.session.commit()
             except:
-                print("Error saving new favourite recipes")
+                print("Error saving new recent recipe")
                 pass
         else:
             recent = self.session.query(Recently).filter(and_(Recently.api_id==id, Recently.user_id==username)).first()

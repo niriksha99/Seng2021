@@ -64,6 +64,7 @@ class Info(Base):
     __tablename__ = 'USERINFO'
     user_id = Column(String(20), ForeignKey('USER.name'), primary_key=True)
     email = Column(String(50), nullable=False)
+    num_recent = Column(Integer, nullable=True) # number of recent recipes viewed
     #birth = Column(String(10), nullable=False)
     #allergy = Column(String(100))
 

@@ -4,3 +4,5 @@ global pageNo
 pageNo = 0
 global back
 back = 0
+global parameters
+parameters = {}

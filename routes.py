@@ -3,7 +3,6 @@ from server import *
 from authenticate import *
 import datetime
 import json
-#import RecipeSystem
 import roles
 import requests
 from model import *
@@ -26,7 +25,6 @@ def index():
 		allergy = returnValue[2]
 		exclude = returnValue[3]
 		return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
-	#recommend_recipe = get_recommend()
 	data = []
 	data = SS.get_recommend()
 	return render_template('home.html', error=0, login=roles.login_role, data=data)
@@ -73,8 +71,6 @@ def register():
 @app.route('/results/<ingredient>/<time>/<allergy>/<exclude>', methods=['GET','POST'])
 #@login_required
 def show_results(ingredient, time, allergy, exclude):
-	#results = SS.get_results(course)
-	#results_data = SS.get_results_data(results)
 	if request.method == 'POST':
 		button = request.form['search']
 		if button =="search":
@@ -116,8 +112,6 @@ def show_results(ingredient, time, allergy, exclude):
 @app.route('/user/<ingredient>/<time>/<allergy>/<exclude>', methods=['GET','POST'])
 #@login_required
 def show_user_results(ingredient, time, allergy, exclude):
-	#results = SS.get_results(course)
-	#results_data = SS.get_results_data(results)
 	if request.method == 'POST':
 		button = request.form['search']
 		if button =="search":
@@ -187,11 +181,9 @@ def get_recipe(recipeID):
 			SS.rate_recipe(current_user.id, recipeID, score, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'])
 			isRated = 1
 
-	method = scrape_yummly(data['attribution']['url'])
+	method = scrape_yummly(data['source']['sourceRecipeUrl'])
 	recipe = session.query(Api).filter(Api.id==recipeID).first()
 	if recipe != None:
-	    #sum = recipe.rate1 + recipe.rate2 + recipe.rate3 + recipe.rate4 + recipe.rate5
-	    #rating = ((recipe.rate1 * 1) + (recipe.rate2 * 2) + (recipe.rate3 * 3) + (recipe.rate4 * 4) + (recipe.rate5 * 5)) / sum
 		rating = recipe.rate
 		print(rating)
 	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method, isRated=isRated, rating=rating)

@@ -164,8 +164,8 @@ class RecipeSystem:
         try:
             all_recipes = []
             result = self.session.query(Api).order_by(Api.rate.desc()).all()
-            print("result is ")
-            print(result)
+            #print("result is ")
+            #print(result)
             j = 0
             for i in result:
                 if j == 6:
@@ -201,9 +201,9 @@ class RecipeSystem:
             result.total = result.total + 1
             result.total_count = result.total_count + rating
             result.rate = result.total_count / result.total
-            print(result.total)
-            print(result.total_count)
-            print(result.rate)
+            #print(result.total)
+            #print(result.total_count)
+            #print(result.rate)
             self.session.commit()
         except:
             pass

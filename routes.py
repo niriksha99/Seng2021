@@ -46,8 +46,8 @@ def dashboard():
 		return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
 	if roles.login_role == 1:
 		fav_recipes = SS.get_fav_recipes_for(current_user.id)
-		#rec_recipes = SS.get_recently_for(current_user.id)
-		return render_template('user.html', user=current_user.id, data=fav_recipes)
+		rec_recipes = SS.get_recently_for(current_user.id)
+		return render_template('user.html', user=current_user.id, fav=fav_recipes, rec=rec_recipes)
 	else:
 		return render_template('401.html')
 
@@ -147,15 +147,18 @@ def get_recipe(recipeID):
 	save = 0
 	isRated = 0
 	rating = 0
+	response = requests.get("http://api.yummly.com/v1/api/recipe/" + recipeID + "?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744")
+	data = response.json()
 	if roles.login_role == 1:
+		# recent = session.query(Info).filter(and_(Info.user_id==current_user.id)).first()
+		# print("user_id: " + recent.user_id + " recipeNumRecent: " + str(recent.num_recent))
+		SS.add_recent_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'])
 		fav = session.query(Favourite).filter(and_(Favourite.api_id==recipeID, Favourite.user_id==current_user.id)).first()
 		if fav != None:
 			save = 1
 		rating = session.query(Rating).filter(and_(Rating.api_id==recipeID, Rating.user_id==current_user.id)).first()
 		if rating != None:
 			isRated = 1
-	response = requests.get("http://api.yummly.com/v1/api/recipe/" + recipeID + "?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744")
-	data = response.json()
 	if request.method == 'POST':
 		button = request.form['save']
 		print("button is ")
@@ -185,13 +188,17 @@ def get_recipe(recipeID):
 		print(rating)
 	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method, isRated=isRated, rating=rating)
 
-@app.route('/my_favorite')
+@app.route('/favorites')
 def my_favorite():
 	if roles.login_role == 1:
 		fav_recipes = SS.get_fav_recipes_for(current_user.id)
-		#rec_recipes = SS.get_recently_for(current_user.id)
 	return render_template('fav.html', user=current_user.id, data=fav_recipes)
 
+@app.route('/recent')
+def recent():
+	if roles.login_role == 1:
+		rec_recipes = SS.get_recently_for(current_user.id)
+	return render_template('recent.html', user=current_user.id, data=rec_recipes)
 
 #@app.errorhandler(404)
 def page_not_found(e):

@@ -33,7 +33,7 @@
                 <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('recent') }}">Recently Viewed</a>
+                <a class="nav-link" href="{{ url_for('my_favorite') }}">Favourites</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{url_for('logout')}}">Sign Out</a>
@@ -52,7 +52,7 @@
           <div class="col-md-8 text-center">
 
             <div class="mb-5 element-animate">
-              <h1>{{ user }} favourite recipes</h1>
+              <h1>{{ user }} recently viewed recipes</h1>
               <p>See the recents, Save your faves, Share your opinions.</p>
             </div>
 
@@ -71,15 +71,15 @@
               <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
                 <div class="text">
                   <h2>
-                  {{recipe['name']}} <br>
-                  Cook Time: {{(recipe['time']|int /60)|round|int}} minutes<br>
+                    {{recipe['name']}} <br>
+                    Cook Time: {{(recipe['time']|int /60)|round|int}} minutes<br>
                   </h2>
                 </div>
               </a>
             </div>
           {% endfor %}
           {% else %}
-          <p> You have no favourite recipes... yet </p>
+          <p> You haven't viewed any recipes. </p>
           {% endif %}
         </div>
       </div>

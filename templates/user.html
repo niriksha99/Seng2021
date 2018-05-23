@@ -29,7 +29,7 @@
                   <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                 </li>
               <li class="nav-item">
-                <a class="nav-link" >Recently Viewed</a>
+                <a class="nav-link" href="{{ url_for('recent') }}">Recently Viewed</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('my_favorite') }}"> Favourite</a>
@@ -90,62 +90,54 @@
 
     <section class="slider-wrap site-section">
       <div class="container">
-        <div class="mb-5 element-animate">
-            <h1>Recently Viewed...</h1>
+      <div class="mb-5 element-animate">
+        <a href="{{ url_for('recent') }}"> <h1>Recently Viewed...</h1></a>
+      </div>
+      <div class="row">
+        {% set i = 3 %}
+        {% if rec %}
+        {% for recipe in rec %}
+        {% if loop.index <= 3 %}
+        <div class="col-md-4 element-animate ">
+          <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
+            <div class="text">
+              <h2>
+                {{recipe['name']}} <br>
+                Cook Time: {{(recipe['time']|int /60)|round|int}} minutes<br>
+              </h2>
+            </div>
+          </a>
         </div>
-        <div class="row">
-          <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg" style="background-image: url('static/images/1.jpg')">
-              <div class="text">
-                <h2>Piroshki</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg" style="background-image: url('static/images/2.jpg')">
-              <div class="text">
-                <h2>Chocolate Cheesecake</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
-          <div class="col-md-4 element-animate ">
-            <a href="#" class="img-bg last" style="background-image: url('static/images/3.png')">
-              <div class="text">
-                <h2>Curry Rice Salad</h2>
-                <p>Try this recipe</p>
-              </div>
-            </a>
-          </div>
-        </div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        <p> You haven't viewed any recipes. </p>
+        {% endif %}
+      </div>
+      </div>
+      <div class="container">
         <div class="mb-5 element-animate">
             <a href="{{ url_for('my_favorite') }}"> <h1>Favourite...</h1></a>
         </div>
         <div class="row">
           {% set i = 3 %}
-          {% if data %}
-          {% for recipe in data %}
-          <!--
-          <div class="col-md-4 element-animate ">
-			    <p>
-                <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} ">{{recipe['name']}}</a><br>
-                <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }} "> <img src= "{{recipe['image']}}"> </a><br>
-			    </p>
-          </div>
-          -->
+          {% if fav %}
+          {% for recipe in fav %}
           {% if loop.index <= 3 %}
           <div class="col-md-4 element-animate ">
           <a href = "{{ url_for('get_recipe', recipeID = recipe['id']) }}" class="img-bg" style="background-image: url({{recipe['image']}})">
             <div class="text">
               <h2>
                 {{recipe['name']}} <br>
+                Cook Time: {{(recipe['time']|int /60)|round|int}} minutes<br>
               </h2>
             </div>
           </a>
-      </div>
+          </div>
           {% endif %}
           {% endfor %}
+          {% else %}
+          <p> You have no favourite recipes... yet. </p>
           {% endif %}
         </div>
       </div>

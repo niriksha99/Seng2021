@@ -30,7 +30,7 @@
                 <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link">Recently Viewed</a>
+                <a class="nav-link" href="{{ url_for('recent') }}">Recently Viewed</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('my_favorite') }}">Favourite</a>
@@ -129,7 +129,7 @@
                 <h2>
                 {{recipe['name']}} <br>
                 Cook Time: {{(recipe['time']|int /60)|round|int}} minutes<br>
-                Average rating: {{recipe['rate']}}
+                Average rating: {{recipe['rate']|round(1)}}
                 </h2>
                 </div>
                 </a>

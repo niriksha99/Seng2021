@@ -77,30 +77,49 @@ class RecipeSystem:
             print("Can't find user")
             pass
 
-    def add_recent_recipe(self, username, id, name, image, time, order):
+    def add_recent_recipe(self, username, id, name, image, time):
         api = self.session.query(Api).filter(Api.id==id).first()
         if api == None:
             #new_recipe = Api(id=id, image=image, name=name, time=time, rate=0, total=0)#rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
             self.add_recipe(id, name, image, time)
-            new_recent = Recently(user_id=username, api_id=id, order=order)
+            new_recent = Recently(user_id=username, api_id=id)
             try:
                 self.session.add(new_recent)
                 self.session.commit()
             except:
                 print("Error saving new recent recipe")
                 pass
-        else:
+        else: # should always go here anyway
             recent = self.session.query(Recently).filter(and_(Recently.api_id==id, Recently.user_id==username)).first()
-            if recent == None:
-                new_recent = Recently(user_id=username, api_id=id)
+            if recent == None: # add to Recently
                 try:
+                    # self.session.commit()
+                    new_recent = Recently(user_id=username, api_id=id, order=0) # most recent
                     self.session.add(new_recent)
+
+                    # if over the limit, delete the oldest one
+                    user_info = self.session.query(Info).filter(and_(Info.user_id==username)).first()
+                    user_info.num_recent = user_info.num_recent + 1
+
+                    # add 1 to all entries in recent
+                    recent_list = self.session.query(Recently).filter(and_(Recently.user_id==username))
+                    for recipe in recent_list: # add 1 to everything
+                        recipe.order = recipe.order + 1
                     self.session.commit()
                 except:
                     print("Error saving new recipes")
                     pass
-            else:
-                print("This recipe has already been persisted")
+            else: # already stored, change order number
+                try:
+                    recent_list = self.session.query(Recently).filter(and_(Recently.user_id==username))
+                    for recipe in recent_list: # add 1 to everything less than old order
+                        if recipe.order < recent.order:
+                            recipe.order = recipe.order + 1
+                    recent.order = 1
+                    self.session.commit()
+                except:
+                    print("Error saving new recipes")
+                    pass
     """
     def get_recently_for(self, user):
         try:

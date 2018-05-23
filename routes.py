@@ -156,8 +156,9 @@ def get_recipe(recipeID):
 	response = requests.get("http://api.yummly.com/v1/api/recipe/" + recipeID + "?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744")
 	data = response.json()
 	if roles.login_role == 1:
-		# print(session.query(Info.num_recent).first())
-		# SS.add_recent_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'], session.query(Info.num_recent).first())
+		# recent = session.query(Info).filter(and_(Info.user_id==current_user.id)).first()
+		# print("user_id: " + recent.user_id + " recipeNumRecent: " + str(recent.num_recent))
+		SS.add_recent_recipe(current_user.id, recipeID, data['name'], data['images'][0]['hostedLargeUrl'], data['totalTimeInSeconds'])
 		fav = session.query(Favourite).filter(and_(Favourite.api_id==recipeID, Favourite.user_id==current_user.id)).first()
 		if fav != None:
 			save = 1

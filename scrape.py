@@ -14,33 +14,40 @@ def scrape_yummly(url):
 
     method = []
 
-    r = requests.get(url, headers=headers)
+    #r = requests.get(url, headers=headers)
 
-    if r.status_code != 200:
-        print("request denied " + str(r.status_code))
-        return method
+    #if r.status_code != 200:
+        #print("request denied " + str(r.status_code))
+        #return method
 
-    soup = BeautifulSoup(r.text, "lxml")
+    #soup = BeautifulSoup(r.text, "lxml")
 
-    result = soup.find("a", "recipe-show-full-directions btn-inline")
+    #result = soup.find("a", "recipe-show-full-directions btn-inline")
 
-    if result == None:
-        return method
+    #if result == None:
+        #return method
 
-    scraped = result.attrs['href']
-    check = scraped[:29]
-    print(check)
+    #scraped = result.attrs['href']
+    check = url[:29]
     if check == "http://www.onceuponachef.com/":
-        method = scrape_onceuponachef(scraped)
-    check = scraped[:32]
+        print(check)
+        method = scrape_onceuponachef(url)
+    check = url[:32]
     if check == "http://barefeetinthekitchen.com/":
-        method = scrape_barefeetinthekitchen(scraped)
-    check = scraped[:27]
+        print(check)
+        method = scrape_barefeetinthekitchen(url)
+    check = url[:27]
     if check == "http://thepioneerwoman.com/":
-        method = scrape_thepioneerwoman(scraped)
-    check = scraped[:25]
+        print(check)
+        method = scrape_thepioneerwoman(url)
+    check = url[:25]
     if check == "http://kalynskitchen.com/":
-        method = scrape_kalynskitchen(scraped)
+        print(check)
+        method = scrape_kalynskitchen(url)
+    check = url[:30]
+    if check == "https://www.bettycrocker.com/":
+        print(check)
+        method = scrape_bettycrocker(url)
 
     return method
 
@@ -59,8 +66,11 @@ def scrape_kalynskitchen(url):
 
     results = soup.find("div", "instructions").findAll("li")
 
+    #for result in results:
+        #method.append(result.contents[0])
     for result in results:
-        method.append(result.contents[0])
+        for i in range(len(result.contents)):
+            method.append(result.contents[i])
 
     return method
 
@@ -79,8 +89,11 @@ def scrape_thepioneerwoman(url):
 
     results = soup.find("span", {"itemprop":"recipeInstructions"})
 
+    #for result in results:
+        #method.append(result.contents[0])
     for result in results:
-        method.append(result.contents[0])
+        for i in range(len(result.contents)):
+            method.append(result.contents[i])
 
     return method
 
@@ -99,8 +112,11 @@ def scrape_barefeetinthekitchen(url):
 
     results = soup.find("div", "wprm-recipe-instruction-group").findAll("div", "wprm-recipe-instruction-text")
 
+    #for result in results:
+        #method.append(result.contents[0])
     for result in results:
-        method.append(result.contents[0])
+        for i in range(len(result.contents)):
+            method.append(result.contents[i])
 
     return method
 
@@ -119,7 +135,10 @@ def scrape_onceuponachef(url):
 
     results = soup.find("div", "instructions").findAll("li")
 
+    #for result in results:
+        #method.append(result.contents[0])
     for result in results:
-        method.append(result.contents[0])
+        for i in range(len(result.contents)):
+            method.append(result.contents[i])
 
     return method

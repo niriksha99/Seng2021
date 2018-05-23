@@ -46,8 +46,8 @@ def dashboard():
 		return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
 	if roles.login_role == 1:
 		fav_recipes = SS.get_fav_recipes_for(current_user.id)
-		#rec_recipes = SS.get_recently_for(current_user.id)
-		return render_template('user.html', user=current_user.id, data=fav_recipes)
+		rec_recipes = SS.get_recently_for(current_user.id)
+		return render_template('user.html', user=current_user.id, fav=fav_recipes, rec=rec_recipes)
 	else:
 		return render_template('401.html')
 
@@ -188,13 +188,17 @@ def get_recipe(recipeID):
 		print(rating)
 	return render_template('recipe_page.html', data=data, login=roles.login_role, save=save, method=method, isRated=isRated, rating=rating)
 
-@app.route('/my_favorite')
+@app.route('/favorites')
 def my_favorite():
 	if roles.login_role == 1:
 		fav_recipes = SS.get_fav_recipes_for(current_user.id)
-		#rec_recipes = SS.get_recently_for(current_user.id)
 	return render_template('fav.html', user=current_user.id, data=fav_recipes)
 
+@app.route('/recent')
+def recent():
+	if roles.login_role == 1:
+		rec_recipes = SS.get_recently_for(current_user.id)
+	return render_template('recent.html', user=current_user.id, data=rec_recipes)
 
 #@app.errorhandler(404)
 def page_not_found(e):

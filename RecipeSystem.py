@@ -9,7 +9,6 @@ from declarative import *
 
 class RecipeSystem:
 
-
     def add_user(self, username, password):
         new_user = User(name=username, password=password)
         try:
@@ -138,27 +137,27 @@ class RecipeSystem:
             except:
                 print("Error saving updating recent recipe")
                 pass
-    """
+
     def get_recently_for(self, user):
         try:
-            all_recipes = []
-            res1 = self.session.query(Recently).filter(and_(Recently.user_id==user, Recently.order==1)).first()
-            if res1 != None:
-                all_recipes.append(res1.api_id)
-            else:
-                return all_recipes
-            res2 = self.session.query(Recently).filter(and_(Recently.user_id==user, Recently.order==2)).first()
-            if res2 != None:
-                all_recipes.append(res2.api_id)
-            else:
-                return all_recipes
-            res3 = self.session.query(Recently).filter(and_(Recently.user_id==user, Recently.order==3)).first()
-            if res3 != None:
-                all_recipes.append(res3.api_id)
-            return all_recipes
+            recipe_list = []
+            print("recently for: " + user)
+            recent_list = self.session.query(Recently).filter(and_(Recently.user_id==user)).order_by(Recently.order.asc())
+            print("got recent list")
+            for recent in recent_list:
+                rec_id = recent.api_id
+                recipe = self.session.query(Api).filter(Api.id==rec_id).first()
+                d = {}
+                d['id'] = recipe.id
+                d['name'] = recipe.name
+                d['image'] = recipe.image
+                d['time'] = recipe.time
+                d['rate'] = recipe.rate
+                recipe_list.append(d)
+            return recipe_list
         except:
             print("Can't find user")
-            pass"""
+            pass
 
     def get_recommend(self):
         try:

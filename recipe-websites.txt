@@ -1,10 +1,10 @@
 http://www.dinnerwithjulie.com/
 
-https://www.skinnytaste.com/
+#https://www.skinnytaste.com/ (28)
 
 http://www.marcussamuelsson.com/
 
-https://www.bettycrocker.com/
+#https://www.bettycrocker.com/
 
 #http://barefeetinthekitchen.com/
 
@@ -20,7 +20,7 @@ http://www.closetcooking.com/
 
 https://life-in-the-lofthouse.com/
 
-https://damndelicious.net/
+#https://damndelicious.net/
 
 https://addapinch.com/
 
@@ -76,7 +76,7 @@ https://www.southernplate.com/
 
 https://buttoni.wordpress.com/
 
-https://leitesculinaria.com/
+#https://leitesculinaria.com/
 
 https://www.ruled.me/
 
@@ -86,7 +86,7 @@ https://iowagirleats.com/
 
 http://picky-palate.com/
 
-https://www.thespruce.com/
+#https://www.thespruce.com/
 
 https://www.yummyhealthyeasy.com/
 

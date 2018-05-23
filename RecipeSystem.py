@@ -78,11 +78,12 @@ class RecipeSystem:
             pass
 
     def add_recent_recipe(self, username, id, name, image, time):
+        '''
         api = self.session.query(Api).filter(Api.id==id).first()
         if api == None:
             #new_recipe = Api(id=id, image=image, name=name, time=time, rate=0, total=0)#rate5=0, rate4=0, rate3=0, rate2=0, rate1=0)
             self.add_recipe(id, name, image, time)
-            new_recent = Recently(user_id=username, api_id=id)
+            new_recent = Recently(user_id=username, api_id=id, order=0)
             try:
                 self.session.add(new_recent)
                 self.session.commit()
@@ -90,36 +91,53 @@ class RecipeSystem:
                 print("Error saving new recent recipe")
                 pass
         else: # should always go here anyway
-            recent = self.session.query(Recently).filter(and_(Recently.api_id==id, Recently.user_id==username)).first()
-            if recent == None: # add to Recently
-                try:
+        '''
+
+        # if not in api db, add to api db
+        api = self.session.query(Api).filter(Api.id==id).first()
+        if api == None:
+            self.add_recipe(id, name, image, time)
+
+        # check if this is already in the Recently database for this user
+        recent = self.session.query(Recently).filter(and_(Recently.api_id==id, Recently.user_id==username)).first()
+        # list of all Recently viewed recipes for this user
+        if recent == None: # new recently : add to Recently
+            try:
+                # update how many recent recipes the user has
+                user_info = self.session.query(Info).filter(and_(Info.user_id==username)).first()
+                print(user_info.num_recent)
+                max = 9 # number of recipes to store
+                if user_info.num_recent == max:
+                    # remove the oldest one, replace with new one
+                    oldest = self.session.query(Recently).filter(and_(Recently.user_id==username, Recently.order==max)).first()
+                    oldest.api_id = id
+                    oldest.order = 0
+                    # self.session.remove(oldest)
                     # self.session.commit()
+                else:
                     new_recent = Recently(user_id=username, api_id=id, order=0) # most recent
                     self.session.add(new_recent)
+                    user_info.num_recent = user_info.num_recent + 1 # increment count
 
-                    # if over the limit, delete the oldest one
-                    user_info = self.session.query(Info).filter(and_(Info.user_id==username)).first()
-                    user_info.num_recent = user_info.num_recent + 1
-
-                    # add 1 to all entries in recent
-                    recent_list = self.session.query(Recently).filter(and_(Recently.user_id==username))
-                    for recipe in recent_list: # add 1 to everything
+                recent_list = self.session.query(Recently).filter(and_(Recently.user_id==username))
+                # add 1 to all entries in recent
+                for recipe in recent_list: # add 1 to everything
+                    recipe.order = recipe.order + 1
+                self.session.commit()
+            except:
+                print("Error saving new recent recipe")
+                pass
+        else: # already stored, change order number
+            try:
+                recent_list = self.session.query(Recently).filter(and_(Recently.user_id==username))
+                for recipe in recent_list: # add 1 to everything less than old order
+                    if recipe.order < recent.order:
                         recipe.order = recipe.order + 1
-                    self.session.commit()
-                except:
-                    print("Error saving new recipes")
-                    pass
-            else: # already stored, change order number
-                try:
-                    recent_list = self.session.query(Recently).filter(and_(Recently.user_id==username))
-                    for recipe in recent_list: # add 1 to everything less than old order
-                        if recipe.order < recent.order:
-                            recipe.order = recipe.order + 1
-                    recent.order = 1
-                    self.session.commit()
-                except:
-                    print("Error saving new recipes")
-                    pass
+                recent.order = 1
+                self.session.commit()
+            except:
+                print("Error saving updating recent recipe")
+                pass
     """
     def get_recently_for(self, user):
         try:
@@ -150,7 +168,7 @@ class RecipeSystem:
             print(result)
             j = 0
             for i in result:
-                if j ==  6:
+                if j == 6:
                     break
                 rec_id = i.id
                 recipe = self.session.query(Api).filter(Api.id==rec_id).first()

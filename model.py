@@ -19,15 +19,19 @@ def get_data():
 
 
 def process_request(ingredient, time, allergy, exclude):
+    roles.parameters = {}
     roles.parameters = {"_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requirePictures": "true"}
-    url = "http://api.yummly.com/v1/api/recipes?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744"
+    #url = "http://api.yummly.com/v1/api/recipes?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744"
     ingredient = ingredient.split()
-    url = url + "&q=" + ingredient[0]
+    '''
     for i in ingredient:
         url = url + "&" + "allowedIngredient[]=" + i
-    roles.parameters['allowedIngredient[]'] = 'beef'
+    '''
+    roles.parameters['q'] = ingredient[0]
+    roles.parameters['allowedIngredient'] = ingredient
     if time != "null":
         time = int(time) * 60
+        #url = url + "&maxTotalTimeInSeconds="+ str(time)
         roles.parameters['maxTotalTimeInSeconds'] = time
     if allergy != "null":
         allergy = allergy.split()
@@ -35,19 +39,23 @@ def process_request(ingredient, time, allergy, exclude):
         while i < len(allergy):
             allergy[i] = trim_allergy(allergy[i])
             i = i + 1
+        '''
+        for a in allergy:
+            url = url + "&allowedAllergy[]=" + a
+        '''
         roles.parameters['allowedAllergy'] = allergy
     if exclude != "null":
         exclude = exclude.split()
         roles.parameters['excludedIngredient'] = exclude
-    url = url + "&maxResult=" + str(9)
-    url = url + "&start=" + str(roles.pageNo)
+    #url = url + "&maxResult=" + str(9)
+    #url = url + "&start=" + str(roles.pageNo)
     roles.parameters['maxResult'] = str(9)
     roles.parameters['start'] = str(roles.pageNo)
     #print(roles.parameters)
-    print(url)
-    response = requests.get(url)
+    print(roles.parameters)
+    response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
     while response.status_code == 500:
-        response = requests.get(url)
+        response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
         print("response status_code is " + str(response.status_code))
     data = response.json()
     data = change_picture_size(data)

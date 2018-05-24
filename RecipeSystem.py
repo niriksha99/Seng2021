@@ -187,10 +187,10 @@ class RecipeSystem:
     def rate_recipe(self, username, id, rating, recipeID, name, image, time):
         try:
             result = self.session.query(Api).filter(Api.id==id).first()
+            new_rating = Rating(user_id=username, api_id=id)
             if result == None:
                 self.add_recipe(recipeID, name, image, time)
-                result = self.session.query(Api).filter(Api.id==id).first()
-                new_rating = Rating(user_id=username, api_id=id)
+                result = self.session.query(Api).filter(Api.id==id).first()                
             try:
                 self.session.add(new_rating)
                 self.session.commit()

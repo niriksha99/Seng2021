@@ -79,35 +79,79 @@ def show_results(ingredient, time, allergy, exclude):
 			time = returnValue[1]
 			allergy = returnValue[2]
 			exclude = returnValue[3]
-			data = process_request(ingredient, time, allergy, exclude)
-			return render_template('result.html', data=data)
+			#data = process_request(ingredient, time, allergy, exclude)
+			return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
 		elif button == "next":
-			roles.pageNo = roles.pageNo + 9
+
+			return redirect(url_for("next_page", ingredient= ingredient, time=time, allergy=allergy, exclude=exclude))
 		elif button == "previous":
-			roles.pageNo = roles.pageNo - 9
+			return redirect(url_for("next_page", ingredient= ingredient, time=time, allergy=allergy, exclude=exclude))
+
+		"""
 		roles.parameters['maxResult'] = 9
 		roles.parameters['start'] = roles.pageNo
-		response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
+		print(roles.parameters)
+		response = requests.get("http://api.yummly.com/v1/api/recipes", parameters=roles.parameters)
+		print(response.status_code)
 		data = response.json()
 		data = change_picture_size(data)
 		secondPage = "false"
-		if roles.pageNo != 0:
-			secondPage = "true"
-		return render_template('result.html', data=data, second=secondPage)
-	if roles.back == 1:
-		roles.back == 0
-		if not roles.parameters:
-			return redirect(url_for("index"))
-		response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
-		data = response.json()
-		data = change_picture_size(data)
-		secondPage = "false"
-		if roles.pageNo != 0:
-			secondPage = "true"
-		return render_template('result.html', data=data, second=secondPage)
-	allergy = trim_allergy(allergy)
+		"""
+	second = "false"
 	data = process_request(ingredient, time, allergy, exclude)
-	return render_template('result.html', data=data)
+	return render_template('result.html', data=data, second=second)
+
+@app.route('/next/<ingredient>/<time>/<allergy>/<exclude>', methods=['GET','POST'])
+def next_page(ingredient, time, allergy, exclude):
+	if request.method == 'POST':
+		button = request.form['search']
+		if button == "next":
+			return redirect(url_for("next_page", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
+		elif button == "previous":
+			return redirect(url_for("previous_page", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
+		elif button == "search":
+			returnValue = get_data()
+			ingredient = returnValue[0]
+			time = returnValue[1]
+			allergy = returnValue[2]
+			exclude = returnValue[3]
+			return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
+	roles.pageNo = roles.pageNo + 9
+	print("ingredient = " + ingredient)
+	print("time = " + time)
+	print("allergy = " + allergy)
+	print("exclude = " + exclude)
+	data = process_request(ingredient, time, allergy, exclude)
+	second = "true"
+	return render_template('result.html', data=data, second=second)
+
+@app.route('/previous/<ingredient>/<time>/<allergy>/<exclude>', methods=['GET','POST'])
+def previous_page(ingredient, time, allergy, exclude):
+	if request.method == 'POST':
+		button = request.form['search']
+		if button == "next":
+			return redirect(url_for("next_page", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
+		elif button == "previous":
+			return redirect(url_for("previous_page", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
+		elif button == "search":
+			returnValue = get_data()
+			ingredient = returnValue[0]
+			time = returnValue[1]
+			allergy = returnValue[2]
+			exclude = returnValue[3]
+			return redirect(url_for("show_results", ingredient=ingredient, time=time, allergy=allergy, exclude=exclude))
+	roles.pageNo = roles.pageNo - 9
+	print("ingredient = " + ingredient)
+	print("time = " + time)
+	print("allergy = " + allergy)
+	print("exclude = " + exclude)
+	data = process_request(ingredient, time, allergy, exclude)
+	if roles.pageNo == 0:
+		second="false"
+	else:
+		second="true"
+	return render_template('result.html', data=data, second=second)
+
 
 @app.route('/user/<ingredient>/<time>/<allergy>/<exclude>', methods=['GET','POST'])
 #@login_required
@@ -128,6 +172,7 @@ def show_user_results(ingredient, time, allergy, exclude):
 			roles.pageNo = roles.pageNo - 9
 		roles.parameters['maxResult'] = 9
 		roles.parameters['start'] = roles.pageNo
+		print(roles.parameters)
 		response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
 		data = response.json()
 		data = change_picture_size(data)
@@ -135,8 +180,6 @@ def show_user_results(ingredient, time, allergy, exclude):
 		if roles.pageNo != 0:
 			secondPage = "true"
 		return render_template('result.html', data=data, second=secondPage)
-
-	allergy = trim_allergy(allergy)
 	data = process_request(ingredient, time, allergy, exclude)
 	return render_template('result.html', data=data)
 
@@ -159,6 +202,8 @@ def get_recipe(recipeID):
 		rating = session.query(Rating).filter(and_(Rating.api_id==recipeID, Rating.user_id==current_user.id)).first()
 		if rating != None:
 			isRated = 1
+	print("isRated = " + str(isRated))
+	print("save = " + str(save))
 	if request.method == 'POST':
 		button = request.form['save']
 		print("button is ")

@@ -19,10 +19,13 @@ def get_data():
 
 
 def process_request(ingredient, time, allergy, exclude):
-    roles.pageNo = 0
     roles.parameters = {"_app_id": "ae10c158", "_app_key": "b5dd6ea0a5e8ffc8fbf8282a1caf0744", "requirePictures": "true"}
+    url = "http://api.yummly.com/v1/api/recipes?_app_id=ae10c158&_app_key=b5dd6ea0a5e8ffc8fbf8282a1caf0744"
     ingredient = ingredient.split()
-    roles.parameters['allowedIngredient'] = ingredient
+    url = url + "&q=" + ingredient[0]
+    for i in ingredient:
+        url = url + "&" + "allowedIngredient[]=" + i
+    roles.parameters['allowedIngredient[]'] = 'beef'
     if time != "null":
         time = int(time) * 60
         roles.parameters['maxTotalTimeInSeconds'] = time
@@ -36,9 +39,16 @@ def process_request(ingredient, time, allergy, exclude):
     if exclude != "null":
         exclude = exclude.split()
         roles.parameters['excludedIngredient'] = exclude
-    roles.parameters['maxResult'] = 9
-    roles.parameters['start'] = roles.pageNo
-    response = requests.get("http://api.yummly.com/v1/api/recipes", roles.parameters)
+    url = url + "&maxResult=" + str(9)
+    url = url + "&start=" + str(roles.pageNo)
+    roles.parameters['maxResult'] = str(9)
+    roles.parameters['start'] = str(roles.pageNo)
+    #print(roles.parameters)
+    print(url)
+    response = requests.get(url)
+    while response.status_code == 500:
+        response = requests.get(url)
+        print("response status_code is " + str(response.status_code))
     data = response.json()
     data = change_picture_size(data)
     return data

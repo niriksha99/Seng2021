@@ -84,7 +84,7 @@
               <h1>{{data['name']}}</h1>
               <br>
               {% if rating %}
-              <p><b>Average rating: {{rating}} </b></p>
+              <p><b>Average rating: {{rating|round(1)}} </b></p>
               {% else %}
               <p><b>No rating has been received.</b></p>
               {% endif %}

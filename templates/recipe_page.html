@@ -106,20 +106,20 @@
           <br>
           <p>
           {% for ingredient in data['ingredientLines'] %}
-          ->&emsp;{{ingredient}}<br>
+            <h5>->&emsp;{{ingredient}}<br></h5>
           {% endfor %}
           </p>
           <br>
-          <h3>Recipe Source </h3>
+          <h3>Recipe Instructions </h3>
           <br>
-          <p>To access the method for recipe, click on this link ->
-          <a href={{data['attribution']['url']}}>{{data['name']}}</a></p>
           {% if method %}
             {% for instruction in method %}
-                <p> {{ instruction }} </p>
+                <h5><p> {{ instruction }} </p></h5>
                 <br>
             {% endfor %}
           {% endif %}
+          <p>To access the method for recipe, click on this link ->
+          <a href={{data['attribution']['url']}}>{{data['name']}}</a></p>
           </div>
           <div class="col-lg-4 col-md-4 mb-5 element-animate">
             {% if login %}

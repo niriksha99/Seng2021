@@ -1,3 +1,3 @@
 # PineapplePizza
 SENG2021
-ignore the folders it takes too long to delete them all
+We moved the whole project from another repository one week before the presentation because the old repository has too many branches and that was a total mess. That's why the initial commit is only 10 days ago.
